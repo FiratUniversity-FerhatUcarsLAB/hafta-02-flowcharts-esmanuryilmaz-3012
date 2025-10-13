@@ -1,0 +1,44 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+
+Dot kodunu da ChatGPT'ye yazdırdım. 
+  
+digraph ATM_Para_Cekme {
+    rankdir=TB;
+    node [shape=rectangle, fontname="Arial"];
+
+    Start [label="BAŞLA", shape=oval];
+    Card [label="Kullanıcı kartı takar"];
+    PIN [label="PIN kodu girilir"];
+    CheckPIN [label="PIN doğru mu?", shape=diamond];
+    WrongPIN [label="PIN yanlış\n(3 defa yanlışsa kartı al)"];
+    Amount [label="Çekilmek istenen miktar girilir"];
+    CheckAmount [label="Tutar geçerli mi? (0 veya - değil)", shape=diamond];
+    CheckBalance [label="Bakiye yeterli mi?", shape=diamond];
+    CheckATM [label="ATM'de yeterli para var mı?", shape=diamond];
+    Withdraw [label="Bankadan miktarı düş\nATM nakit verir"];
+    ShowBalance [label="Yeni bakiye gösterilir"];
+    Receipt [label="Makbuz ister mi?", shape=diamond];
+    PrintReceipt [label="Makbuz yazdırılır"];
+    ReturnCard [label="Kart geri verilir"];
+    End [label="BİTİR", shape=oval];
+
+    // Akış bağlantıları
+    Start -> Card -> PIN -> CheckPIN;
+    CheckPIN -> WrongPIN [label="Hayır"];
+    WrongPIN -> PIN [label="Deneme < 3"];
+    WrongPIN -> End [label="3 defa yanlış"];
+
+    CheckPIN -> Amount [label="Evet"];
+    Amount -> CheckAmount;
+    CheckAmount -> End [label="Hayır"];
+    CheckAmount -> CheckBalance [label="Evet"];
+    CheckBalance -> End [label="Hayır"];
+    CheckBalance -> CheckATM [label="Evet"];
+    CheckATM -> End [label="Hayır"];
+    CheckATM -> Withdraw [label="Evet"];
+    Withdraw -> ShowBalance -> Receipt;
+    Receipt -> PrintReceipt [label="Evet"];
+    Receipt -> ReturnCard [label="Hayır"];
+    PrintReceipt -> ReturnCard -> End;
+}
