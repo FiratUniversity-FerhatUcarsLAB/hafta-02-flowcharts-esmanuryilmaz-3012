@@ -1,0 +1,578 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+Bu ödevi Google Gemini ile yaptım.
+Bana taslak çıkarabilmesi için basit bir komut yazmakla başladım, "online alışveriş sepeti için bir pseudocode yaz"
+Gemini'nin cevabı:
+Harika bir istek\! Bir **online alışveriş sepeti** için temel işlevleri kapsayan bir **pseudocode (sözde kod)** örneğini aşağıda bulabilirsin.
+
+Bu pseudocode, temel olarak sepete ürün ekleme, ürünü sepetten çıkarma, ürün miktarını güncelleme ve sepetin toplamını hesaplama işlevlerine odaklanır.
+
+-----
+
+## Online Alışveriş Sepeti Pseudocode (Sözde Kod)
+
+Bu örnekte, sepeti tutacak bir veri yapısı olarak, ürün ID'sini (benzersiz kimlik) anahtar ve ürünün kendisini (isim, fiyat, miktar vb.) değer olarak içeren bir **dizilim (Array/List of Objects)** veya **harita (Map/Dictionary)** kullanacağız.
+
+```pseudocode
+// --------------------------------------------------------
+// VERİ YAPILARI
+// --------------------------------------------------------
+
+// Her bir ürünün yapısı (Örnek)
+YAPI Urun {
+    ID: TAM SAYI
+    Ad: METİN
+    Fiyat: ONDALIK SAYI
+}
+
+// Sepetteki her bir kalemin yapısı
+YAPI SepetKalemi {
+    Urun: Urun // Yukarıdaki Urun yapısından
+    Miktar: TAM SAYI // Sepetteki adedi
+    ToplamFiyat: ONDALIK SAYI // Miktar * Urun.Fiyat
+}
+
+// Alışveriş Sepeti, SepetKalemi yapılarından oluşan bir listesidir.
+SEPET: LİSTE SepetKalemi
+
+// --------------------------------------------------------
+// TEMEL İŞLEVLER
+// --------------------------------------------------------
+
+// 1. ÜRÜNÜ SEPTE EKLEME VEYA MİKTARINI ARTIRMA
+İŞLEV SepeteEkle(urunID, miktar):
+    EĞER miktar <= 0 İSE
+        GERİ DÖN "Hata: Miktar pozitif olmalıdır."
+    
+    // Sepette bu ürünü ara
+    KALEM = SepetteBul(urunID)
+    
+    EĞER KALEM BOŞ DEĞİL İSE
+        // Ürün zaten sepette varsa, miktarını güncelle
+        YeniMiktar = KALEM.Miktar + miktar
+        GÜNCELLE SepetKalemi(KALEM, YeniMiktar)
+    DEĞİLSE
+        // Ürün sepette yoksa, yeni bir kalem oluştur ve ekle
+        URUN = VeritabanındanUrunGetir(urunID) // Varsayımsal veritabanı sorgusu
+        EĞER URUN BOŞ DEĞİL İSE
+            YENİ_KALEM = YENİ SepetKalemi(URUN, miktar)
+            SEPET'E Ekle(YENİ_KALEM)
+            GÜNCELLE SepetKalemiToplamFiyat(YENİ_KALEM)
+        DEĞİLSE
+            GERİ DÖN "Hata: Ürün veritabanında bulunamadı."
+        
+    GERİ DÖN "Ürün sepete başarıyla eklendi."
+
+// 2. ÜRÜN MİKTARINI GÜNCELLEME
+İŞLEV SepetMiktarGuncelle(urunID, yeniMiktar):
+    KALEM = SepetteBul(urunID)
+    
+    EĞER KALEM BOŞ DEĞİL İSE
+        EĞER yeniMiktar <= 0 İSE
+            // Miktar sıfır veya daha az ise ürünü sepetten çıkar
+            SepettenCikar(urunID)
+        DEĞİLSE
+            // Miktarı güncelle ve toplam fiyatı yeniden hesapla
+            GÜNCELLE SepetKalemi(KALEM, yeniMiktar)
+            GERİ DÖN "Ürün miktarı güncellendi."
+    DEĞİLSE
+        GERİ DÖN "Hata: Ürün sepette bulunamadı."
+
+// 3. ÜRÜNÜ SEPETTEN ÇIKARMA
+İŞLEV SepettenCikar(urunID):
+    KALEM = SepetteBul(urunID)
+    
+    EĞER KALEM BOŞ DEĞİL İSE
+        SEPET'TEN Kaldır(KALEM)
+        GERİ DÖN "Ürün sepetten çıkarıldı."
+    DEĞİLSE
+        GERİ DÖN "Hata: Ürün sepette bulunamadı."
+
+// 4. SEPET TOPLAMINI HESAPLAMA
+İŞLEV SepetToplaminiHesapla():
+    GENEL_TOPLAM = 0.0
+    HER BİR KALEM İÇİN SEPET'TE:
+        GENEL_TOPLAM = GENEL_TOPLAM + KALEM.ToplamFiyat
+    
+    GERİ DÖN GENEL_TOPLAM // KDV, Kargo vb. sonradan eklenebilir.
+
+// --------------------------------------------------------
+// YARDIMCI İŞLEVLER
+// --------------------------------------------------------
+
+// Belirli bir ürünü sepette bulur
+İŞLEV SepetteBul(urunID):
+    HER BİR KALEM İÇİN SEPET'TE:
+        EĞER KALEM.Urun.ID EŞİTTİR urunID İSE
+            GERİ DÖN KALEM
+    GERİ DÖN BOŞ // Bulunamadı
+
+// Sepet Kaleminin Toplam Fiyatını Hesaplar ve Günceller
+İŞLEV GÜNCELLE SepetKalemiToplamFiyat(kalem):
+    kalem.ToplamFiyat = kalem.Urun.Fiyat * kalem.Miktar
+    GERİ DÖN
+
+// SepetKalemini belirli bir yeni miktar ile günceller
+İŞLEV GÜNCELLE SepetKalemi(kalem, yeniMiktar):
+    kalem.Miktar = yeniMiktar
+    GÜNCELLE SepetKalemiToplamFiyat(kalem)
+    GERİ DÖN
+```
+
+### Özet Açıklama
+
+  * **Veri Yapıları:** **`Urun`** ürünün temel bilgilerini, **`SepetKalemi`** ise o ürünün sepetteki miktarını ve o kalem için toplam fiyatı tutar. **`SEPET`** bu kalemlerin listesidir.
+  * **`SepeteEkle`:** Önce ürünün sepette olup olmadığı kontrol edilir. Varsa miktar artırılır, yoksa yeni bir kalem olarak eklenir.
+  * **`SepetMiktarGuncelle`:** Mevcut bir ürünün miktarını değiştirir. Yeni miktar sıfır veya daha az ise, ürünü doğrudan sepetten çıkarır.
+  * **`SepettenCikar`:** Belirtilen ID'ye sahip ürünü sepetten tamamen kaldırır.
+  * **`SepetToplaminiHesapla`:** Sepetteki her kalemin toplam fiyatını toplayarak sepetin genel toplamını verir.
+
+Burada üstüne biraz düşündükten sonra "sepette indirim" ihtimalini de eklemeye karar verdim. "güzel ama sepette indirim olması ihtimalini de hesaplarına ekleyebilir misin?"
+
+Gemini'nin cevabı:
+Harika bir ekleme\! Online alışveriş sepetlerinde indirimler (kuponlar, promosyonlar vb.) kritik bir özelliktir.
+
+Önceki pseudocode'a, hem ürün bazlı hem de genel sepet bazlı indirimleri yönetebilecek şekilde gerekli güncellemeleri yapalım.
+
+## Online Alışveriş Sepeti Pseudocode (İndirimli Versiyon)
+
+Temel veri yapılarına ve **`SepetToplaminiHesapla`** işlevine indirim mantığını ekleyeceğiz.
+
+### 1\. Veri Yapılarının Güncellenmesi
+
+İndirim bilgilerini tutmak için yeni alanlar ekliyoruz.
+
+```pseudocode
+// --------------------------------------------------------
+// VERİ YAPILARI (GÜNCELLENMİŞ)
+// --------------------------------------------------------
+
+YAPI Urun {
+    ID: TAM SAYI
+    Ad: METİN
+    Fiyat: ONDALIK SAYI
+}
+
+YAPI SepetKalemi {
+    Urun: Urun
+    Miktar: TAM SAYI
+    BirimIndirim: ONDALIK SAYI // Ürüne özel indirim (örn: %10 veya sabit miktar)
+    AraToplam: ONDALIK SAYI    // Miktar * (Fiyat - BirimIndirim)
+}
+
+YAPI AlisverisSepeti {
+    Kalemler: LİSTE SepetKalemi // Sepetteki ürünlerin listesi
+    KuponKodu: METİN            // Uygulanan kupon kodu
+    GenelIndirim: ONDALIK SAYI  // Sepet geneline uygulanan indirim miktarı
+}
+
+SEPET: AlisverisSepeti
+SEPET.Kalemler = YENİ LİSTE SepetKalemi
+SEPET.KuponKodu = ""
+SEPET.GenelIndirim = 0.0
+
+// --------------------------------------------------------
+// TEMEL İŞLEVLER (GÜNCELLENMİŞ VE YENİ)
+// --------------------------------------------------------
+```
+
+### 2\. Ara Toplam ve İndirim Uygulama İşlevlerinin Güncellenmesi
+
+**`GUNCELLE SepetKalemiAraToplam`** işlevi artık birim indirimi de hesaba katacak.
+
+```pseudocode
+// Sepet Kaleminin Ara Toplamını Hesaplar ve Günceller
+İŞLEV GUNCELLE SepetKalemiAraToplam(kalem):
+    // İndirimli Birim Fiyatı Hesapla
+    IndirimliFiyat = kalem.Urun.Fiyat - kalem.BirimIndirim
+    
+    // Ara Toplamı Hesapla
+    kalem.AraToplam = IndirimliFiyat * kalem.Miktar
+    GERİ DÖN
+
+// Mevcut SepetKalemi İşlevleri de GUNCELLE SepetKalemiAraToplam'ı çağırmalıdır.
+// (Örnek: SepeteEkle, SepetMiktarGuncelle)
+
+// YENİ İŞLEV: Sepet Genelinde Kupon Uygulama
+İŞLEV KuponUygula(kod):
+    KUPO_BILGISI = KuponVerileriniGetir(kod) // Varsayımsal DB sorgusu
+    
+    EĞER KUPO_BILGISI BOŞ DEĞİL İSE
+        SEPET.KuponKodu = kod
+        
+        // Kuponun indirim değerini hesapla (Örn: %10 indirim)
+        SepetAraToplami = SepetKalemleriToplaminiHesapla()
+        
+        EĞER KUPO_BILGISI.Tip EŞİTTİR "Yüzde" İSE
+            IndirimMiktari = SepetAraToplami * (KUPO_BILGISI.Deger / 100)
+        DEĞİLSE EĞER KUPO_BILGISI.Tip EŞİTTİR "Sabit" İSE
+            IndirimMiktari = KUPO_BILGISI.Deger
+        
+        SEPET.GenelIndirim = IndirimMiktari
+        GERİ DÖN "Kupon başarıyla uygulandı. İndirim: " + IndirimMiktari
+    DEĞİLSE
+        SEPET.KuponKodu = ""
+        SEPET.GenelIndirim = 0.0
+        GERİ DÖN "Hata: Geçersiz Kupon Kodu."
+```
+
+### 3\. Toplam Hesaplama İşlevinin Güncellenmesi
+
+Bu en önemli adımdır. Önce kalemlerin indirimi hesaplanır, sonra genel indirim düşülür.
+
+```pseudocode
+// YARDIMCI İŞLEV: Kalemlerin Toplamını Hesaplar (Genel İndirim Düşülmeden Önce)
+İŞLEV SepetKalemleriToplaminiHesapla():
+    ARA_TOPLAM = 0.0
+    HER BİR KALEM İÇİN SEPET.Kalemler İÇİNDE:
+        ARA_TOPLAM = ARA_TOPLAM + KALEM.AraToplam // Bu AraToplam zaten birim indirimini içerir.
+    GERİ DÖN ARA_TOPLAM
+
+// ASIL İŞLEV: SEPET TOPLAMINI HESAPLAMA
+İŞLEV SepetToplaminiHesapla():
+    
+    // 1. Ürün bazlı indirimler düşülmüş Ara Toplamı al
+    SepetAraToplami = SepetKalemleriToplaminiHesapla()
+    
+    // 2. Genel Kupon/Promosyon İndirimini düş
+    NihaiToplam = SepetAraToplami - SEPET.GenelIndirim
+    
+    // 3. (Opsiyonel) Nihai Toplamın Negatif Olmasını Engelle
+    EĞER NihaiToplam < 0 İSE
+        NihaiToplam = 0.0
+    
+    // (Buraya KDV, Kargo Ücreti Eklenebilir)
+    
+    // GÖSTERİM AMAÇLI DETAYLARI DÖN
+    SONUC = YENİ YAPI {
+        AraToplam: SepetAraToplami
+        GenelIndirim: SEPET.GenelIndirim
+        OdenecekToplam: NihaiToplam
+    }
+    
+    GERİ DÖN SONUC
+```
+
+Bu güncel pseudocode, ürün bazlı indirimleri (**`BirimIndirim`**) ve sepet geneli indirimleri (**`GenelIndirim`**) ayrı ayrı yöneterek ve sonuçları **`SepetToplaminiHesapla`** işlevinde birleştirerek daha esnek ve gerçekçi bir alışveriş sepeti yapısı oluşturur.
+
+
+Sonra burada ayrı ayrı yazdığı şeyleri birleştirmesini istedim.
+
+Gemini'nin cevabı:
+Harika\! Önceki iki aşamayı (Temel Sepet İşlevleri ve İndirim Yönetimi) tek ve kapsamlı bir **Online Alışveriş Sepeti Pseudocode (Sözde Kod)** setinde birleştirelim.
+
+Bu birleşik kod, temel sepet yönetimini, ürün bazlı indirimi ve genel kupon indirimini kapsayacaktır.
+
+-----
+
+## BİRLEŞTİRİLMİŞ ONLINE ALIŞVERİŞ SEPETİ PSEUDOCODE
+
+```pseudocode
+// --------------------------------------------------------
+// VERİ YAPILARI
+// --------------------------------------------------------
+
+// Her bir ürünün temel yapısı (Veritabanından gelir)
+YAPI Urun {
+    ID: TAM SAYI
+    Ad: METİN
+    Fiyat: ONDALIK SAYI
+}
+
+// Sepetteki her bir kalemin yapısı
+YAPI SepetKalemi {
+    Urun: Urun
+    Miktar: TAM SAYI
+    BirimIndirim: ONDALIK SAYI // Ürüne uygulanan birim başına indirim miktarı (örneğin: 5 TL)
+    AraToplam: ONDALIK SAYI    // Miktar * (Urun.Fiyat - BirimIndirim)
+}
+
+// Alışveriş Sepetinin Genel Yapısı
+YAPI AlisverisSepeti {
+    Kalemler: LİSTE SepetKalemi
+    KuponKodu: METİN            // Uygulanan kupon kodu
+    GenelIndirim: ONDALIK SAYI  // Sepet Ara Toplamından düşülecek genel indirim miktarı
+}
+
+// Global Sepet Nesnesi
+SEPET: AlisverisSepeti
+SEPET.Kalemler = YENİ LİSTE SepetKalemi
+SEPET.KuponKodu = ""
+SEPET.GenelIndirim = 0.0
+
+// --------------------------------------------------------
+// YARDIMCI İŞLEVLER
+// --------------------------------------------------------
+
+// Belirli bir ürünü sepette bulur
+İŞLEV SepetteBul(urunID):
+    HER BİR KALEM İÇİN SEPET.Kalemler İÇİNDE:
+        EĞER KALEM.Urun.ID EŞİTTİR urunID İSE
+            GERİ DÖN KALEM
+    GERİ DÖN BOŞ
+
+// Sepet Kaleminin Ara Toplamını Hesaplar ve Günceller
+İŞLEV GUNCELLE SepetKalemiAraToplam(kalem):
+    // İndirimli Birim Fiyatı Hesapla: Fiyat - Birim Indirim
+    IndirimliFiyat = kalem.Urun.Fiyat - kalem.BirimIndirim
+    EĞER IndirimliFiyat < 0 İSE IndirimliFiyat = 0.0 // Fiyatın sıfırın altına düşmesini engelle
+    
+    // Ara Toplamı Hesapla: İndirimli Fiyat * Miktar
+    kalem.AraToplam = IndirimliFiyat * kalem.Miktar
+    GERİ DÖN
+
+// SepetKalemini yeni miktar ve varsayılan (veya mevcut) indirim ile günceller
+İŞLEV GUNCELLE SepetKalemi(kalem, yeniMiktar):
+    kalem.Miktar = yeniMiktar
+    GUNCELLE SepetKalemiAraToplam(kalem) // Ara toplamı yeniden hesapla
+    GERİ DÖN
+
+// --------------------------------------------------------
+// TEMEL SEPET İŞLEVLERİ
+// --------------------------------------------------------
+
+// 1. ÜRÜNÜ SEPTE EKLEME VEYA MİKTARINI ARTIRMA
+İŞLEV SepeteEkle(urunID, miktar):
+    EĞER miktar <= 0 İSE GERİ DÖN "Hata: Miktar pozitif olmalıdır."
+    
+    KALEM = SepetteBul(urunID)
+    
+    EĞER KALEM BOŞ DEĞİL İSE
+        // Ürün zaten sepette varsa, miktarını güncelle
+        YeniMiktar = KALEM.Miktar + miktar
+        GUNCELLE SepetKalemi(KALEM, YeniMiktar)
+    DEĞİLSE
+        // Yeni kalem oluştur
+        URUN = VeritabanındanUrunGetir(urunID) // Varsayımsal veritabanı sorgusu
+        EĞER URUN BOŞ DEĞİL İSE
+            YENİ_KALEM = YENİ SepetKalemi(URUN, miktar)
+            YENİ_KALEM.BirimIndirim = UrunIndiriminiGetir(urunID) // Ürüne özel indirimi al
+            SEPET.Kalemler'E Ekle(YENİ_KALEM)
+            GUNCELLE SepetKalemiAraToplam(YENİ_KALEM)
+        DEĞİLSE
+            GERİ DÖN "Hata: Ürün veritabanında bulunamadı."
+        
+    GERİ DÖN "Ürün sepete başarıyla eklendi."
+
+// 2. ÜRÜN MİKTARINI GÜNCELLEME
+İŞLEV SepetMiktarGuncelle(urunID, yeniMiktar):
+    KALEM = SepetteBul(urunID)
+    
+    EĞER KALEM BOŞ DEĞİL İSE
+        EĞER yeniMiktar <= 0 İSE
+            SepettenCikar(urunID)
+            GERİ DÖN "Ürün miktarı sıfırlandığı için sepetten çıkarıldı."
+        DEĞİLSE
+            GUNCELLE SepetKalemi(KALEM, yeniMiktar)
+            GERİ DÖN "Ürün miktarı güncellendi."
+    DEĞİLSE
+        GERİ DÖN "Hata: Ürün sepette bulunamadı."
+
+// 3. ÜRÜNÜ SEPETTEN ÇIKARMA
+İŞLEV SepettenCikar(urunID):
+    KALEM = SepetteBul(urunID)
+    
+    EĞER KALEM BOŞ DEĞİL İSE
+        SEPET.Kalemler'DEN Kaldır(KALEM)
+        GERİ DÖN "Ürün sepetten çıkarıldı."
+    DEĞİLSE
+        GERİ DÖN "Hata: Ürün sepette bulunamadı."
+
+// --------------------------------------------------------
+// İNDİRİM YÖNETİMİ İŞLEVLERİ
+// --------------------------------------------------------
+
+// YARDIMCI İŞLEV: Sepet Kalemlerinin Toplamını Hesaplar (Genel İndirim Düşülmeden Önce)
+İŞLEV SepetKalemleriToplaminiHesapla():
+    ARA_TOPLAM = 0.0
+    HER BİR KALEM İÇİN SEPET.Kalemler İÇİNDE:
+        ARA_TOPLAM = ARA_TOPLAM + KALEM.AraToplam // AraToplam zaten birim indirimi içerir.
+    GERİ DÖN ARA_TOPLAM
+
+// Kupon/Promosyon Uygulama
+İŞLEV KuponUygula(kod):
+    KUPO_BILGISI = KuponVerileriniGetir(kod) // Varsayımsal DB sorgusu
+    
+    EĞER KUPO_BILGISI BOŞ DEĞİL İSE
+        SepetAraToplami = SepetKalemleriToplaminiHesapla()
+        
+        // Kuponun tipine göre indirim miktarını hesapla
+        EĞER KUPO_BILGISI.Tip EŞİTTİR "Yüzde" İSE
+            IndirimMiktari = SepetAraToplami * (KUPO_BILGISI.Deger / 100)
+        DEĞİLSE EĞER KUPO_BILGISI.Tip EŞİTTİR "Sabit" İSE
+            IndirimMiktari = KUPO_BILGISI.Deger
+        DEĞİLSE
+            IndirimMiktari = 0.0
+        
+        // Sepet nesnesini güncelle
+        SEPET.KuponKodu = kod
+        SEPET.GenelIndirim = IndirimMiktari
+        GERİ DÖN "Kupon başarıyla uygulandı."
+    DEĞİLSE
+        SEPET.KuponKodu = ""
+        SEPET.GenelIndirim = 0.0
+        GERİ DÖN "Hata: Geçersiz Kupon Kodu."
+
+// --------------------------------------------------------
+// SONUÇ HESAPLAMA
+// --------------------------------------------------------
+
+// SEPETİN FİNAL TOPLAMINI HESAPLAMA
+İŞLEV SepetToplaminiHesapla():
+    
+    // 1. Ürün bazlı indirimler düşülmüş Ara Toplamı al
+    SepetAraToplami = SepetKalemleriToplaminiHesapla()
+    
+    // 2. Genel Kupon İndirimini düş
+    NihaiToplam = SepetAraToplami - SEPET.GenelIndirim
+    
+    // 3. Negatif toplamı engelle
+    EĞER NihaiToplam < 0 İSE
+        NihaiToplam = 0.0
+    
+    // (Opsiyonel: Kargo ve KDV'yi buraya ekle)
+    
+    // Detaylı sonuç yapısını dön
+    SONUC = YENİ YAPI {
+        ToplamUrunFiyati: SepetAraToplami
+        UygulananKuponIndirimi: SEPET.GenelIndirim
+        OdenecekToplam: NihaiToplam
+    }
+    
+    GERİ DÖN SONUC
+```
+
+Burada son bir kontrolden sonra pseudocode ile işim bittiği için dot koduna geçtim. "şimdi bunun dot kodunu çıkar"
+
+Gemini'nin cevabı:
+Bu pseudocode'u doğrudan çalıştırılabilir bir **DOT (Graphviz)** koduna çevirmek, DOT dilinin temel amacı (grafik ve diyagram oluşturma) nedeniyle **mümkün değildir**.
+
+**Neden Mümkün Değil?**
+
+1.  **DOT'un Amacı:** DOT dili (Graphviz), *ilişkileri* ve *yapıları* görselleştirmek için kullanılır (örneğin, bir veritabanı şeması, bir ağaç yapısı veya bir iş akışı).
+2.  **Pseudocode'un Amacı:** Pseudocode ise *algoritmanın mantığını* ve *işlem sırasını* tanımlar.
+3.  **Algoritma vs. Diyagram:** DOT, algoritmik mantığı (koşullu dallanmalar, döngüler, değişken atamaları) doğrudan ifade edemez. Bir pseudocode'u görselleştirmek için genellikle **Akış Şeması (Flowchart)** kullanılır.
+
+-----
+
+### Çözüm: Akış Şeması (Flowchart) Görselleştirmesi için DOT Kodu
+
+Ancak, pseudocode'daki **ana iş akışını** ve **fonksiyon çağrılarını** temsil eden bir **Akış Şeması** oluşturabiliriz. Bu, sistemin temel yapısını görselleştirecektir.
+
+Aşağıdaki DOT kodu, temel sepet fonksiyonlarını ve onların birbirleriyle olan ilişkilerini gösterir.
+
+```dot
+// Bu DOT kodu, Online Alışveriş Sepeti sisteminin temel iş akışını gösterir.
+digraph AlisverisSepetiAkisSemasi {
+    // Genel ayarlar
+    rankdir=TB; // Yukarından aşağıya akış (Top to Bottom)
+    node [shape=box, style="filled", fillcolor="#EEEEEE"];
+
+    // Başlangıç ve Bitiş
+    start [shape=Mdiamond, label="Kullanıcı Eylemi", fillcolor="#D1E8F7"];
+    end [shape=Mdiamond, label="Sepet Güncel", fillcolor="#D1E8F7"];
+
+    // Ana Sepet Fonksiyonları
+    ekle [label="SepeteEkle(ID, miktar)", fillcolor="#A0E8A0"];
+    guncelle [label="SepetMiktarGuncelle(ID, miktar)", fillcolor="#A0E8A0"];
+    cikar [label="SepettenCikar(ID)", fillcolor="#A0E8A0"];
+    kupon [label="KuponUygula(kod)", fillcolor="#F7E8D1"];
+    
+    // Yardımcı/Hesaplama Fonksiyonları
+    toplam_kalem [label="SepetKalemleriToplaminiHesapla()", shape=oval, fillcolor="#F7D1D1"];
+    toplam_sepet [label="SepetToplaminiHesapla()", shape=doublecircle, fillcolor="#FFD700"];
+    
+    // Veri İşleme (Helper)
+    ara_toplam_guncelle [label="GUNCELLE SepetKalemiAraToplam()", shape=note, fillcolor="#C3C3E5"];
+    sepet_bul [label="SepetteBul(ID)", shape=note, fillcolor="#C3C3E5"];
+
+
+    // 1. Ürün Ekleme Akışı
+    start -> ekle;
+    ekle -> sepet_bul [label="1. Ürün Var mı?"];
+    sepet_bul -> ara_toplam_guncelle [label="EVET (Miktar Güncelle)"];
+    sepet_bul -> ara_toplam_guncelle [label="HAYIR (Yeni Kalem Ekle)"];
+
+    // 2. Miktar Güncelleme Akışı
+    guncelle -> sepet_bul;
+    
+    // 3. İndirim Uygulama Akışı
+    kupon -> toplam_kalem [label="Genel İndirim Hesaplama"];
+    
+    // 4. Nihai Toplam Hesaplama Akışı
+    toplam_kalem -> toplam_sepet [label="Ara Toplamı Kullan"];
+
+    // Bütün ana işlevler sepetin güncellenmesine ve toplam hesaplamaya yol açar.
+    ara_toplam_guncelle -> toplam_sepet;
+    cikar -> toplam_sepet;
+    kupon -> toplam_sepet;
+    
+    // En son nihai toplamı hesapla
+    toplam_sepet -> end [label="Nihai Fiyatı Göster"];
+}
+```
+
+### DOT Kodunu Kullanma Talimatı
+
+Bu kodu çalıştırmak için:
+
+1.  `alisveris_sepeti.dot` gibi bir dosyaya kaydedin.
+2.  Graphviz yazılımını (veya online bir Graphviz aracını) kullanın.
+3.  Komut satırında çalıştırın (Graphviz yüklüyse):
+    ```bash
+    dot -Tpng alisveris_sepeti.dot -o alisveris_sepeti.png
+    ```
+    Bu komut, sepet sisteminizin temel iş akışını gösteren bir PNG görseli oluşturacaktır.
+
+En son olarak ise merakımdan ben bir soru sordum, üstte pseudocode'dan dot kodu çıkarılmaz dediği için. "o zaman bir şeyi dot koduna çevirmek istediğimde önce algoritmasını mı çıkarmam lazım pseudocode da aynı zamanda belli bir algoritmayı ifade etmiyor mu ama"
+
+Gemini'nin cevabı:
+Bu çok yerinde ve önemli bir soru\! Kavramları netleştirelim:
+
+### 1\. Pseudocode ve Algoritma
+
+> **Pseudocode da aynı zamanda belli bir algoritmayı ifade etmiyor mu?**
+
+**Evet, kesinlikle.** Pseudocode, bir algoritmanın mantığını, yapısal kurallarını ve adımlarını **insan diline en yakın** şekilde, herhangi bir programlama dilinin katı sözdiziminden (syntax) bağımsız olarak ifade eden bir gösterim şeklidir.
+
+  * **Pseudocode** $\approx$ Algoritmanın Soyut Taslağı
+
+### 2\. Pseudocode ve DOT Kodu Arasındaki Fark
+
+Sorunun özü şurada yatıyor: Pseudocode bir algoritmayı ifade etse de, **DOT kodunun amacı farklıdır.**
+
+| Özellik | Pseudocode (Algoritma) | DOT Kodu (Graphviz) |
+| :--- | :--- | :--- |
+| **Amaç** | **Mantığı ve Adımları** tanımlamak. | **İlişkileri ve Yapıları** görselleştirmek. |
+| **İfade Ettiği** | Koşullar (`EĞER`), Döngüler (`HER BİR İÇİN`), Değişken Atamaları. | Düğümler (Nodes) ve Kenarlar (Edges) arasındaki Bağlantılar. |
+| **Görselleştirme** | Genellikle **Akış Şeması (Flowchart)** ile gösterilir. | **Grafikler** (yapı diyagramları, ağaçlar, hiyerarşiler) oluşturur. |
+
+#### Örnekle Açıklama:
+
+Bir pseudocode adımına bakalım:
+
+```pseudocode
+EĞER KALEM BOŞ DEĞİL İSE
+    GÜNCELLE SepetKalemi(KALEM, YeniMiktar)
+DEĞİLSE
+    SEPET'E Ekle(YENİ_KALEM)
+```
+
+1.  **Pseudocode için:** Bu, bir **koşullu dallanma**dır (if-else).
+2.  **DOT için:** DOT, bu dallanmayı kendiliğinden anlamaz. Bizim ona şunu söylememiz gerekir: "Bir `SepetteBul` düğümü oluştur, buradan çıkan iki ok (`EVET` ve `HAYIR`) ile iki farklı düğüme (`GÜNCELLE` ve `EKLE`) bağlan."
+
+### Sonuç ve Çözüm Adımı
+
+> **O zaman bir şeyi dot koduna çevirmek istediğimde önce algoritmasını mı çıkarmam lazım?**
+
+Doğru yaklaşım şudur:
+
+1.  **Zaten elinizde algoritma (pseudocode) var.**
+2.  DOT koduna çevirmek, algoritmayı doğrudan koda çevirmek değil, **algoritmanın iş akışını veya yapısal ilişkilerini görsel bir diyagrama** dönüştürmektir.
+
+Yani, yapmanız gereken:
+
+1.  Pseudocode'daki her ana **işlemi (fonksiyon, karar)** bir **DOT düğümü** olarak tanımlamak.
+2.  Pseudocode'daki **akış sırasını (çağrılar, ardışıklık)**, **DOT kenarları** (oklar) ile göstermek.
+
+Bu nedenle, size sunduğum çözümde, pseudocode'daki her bir fonksiyonu bir düğüm yaptım ve birbirlerini nasıl çağırdıklarını oklarla (ilişkilerle) gösterdim. Bu, pseudocode'un *yapısal bir özetini* görselleştirmenin en uygun yoludur.
