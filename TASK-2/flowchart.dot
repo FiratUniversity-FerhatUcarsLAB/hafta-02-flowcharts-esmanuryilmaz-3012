@@ -1,0 +1,54 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+
+DOT kodunu da Google Gemini aracılığıyla yazdırdım.
+
+
+// Bu DOT kodu, Online Alışveriş Sepeti sisteminin temel iş akışını gösterir.
+digraph AlisverisSepetiAkisSemasi {
+    // Genel ayarlar
+    rankdir=TB; // Yukarından aşağıya akış (Top to Bottom)
+    node [shape=box, style="filled", fillcolor="#EEEEEE"];
+
+    // Başlangıç ve Bitiş
+    start [shape=Mdiamond, label="Kullanıcı Eylemi", fillcolor="#D1E8F7"];
+    end [shape=Mdiamond, label="Sepet Güncel", fillcolor="#D1E8F7"];
+
+    // Ana Sepet Fonksiyonları
+    ekle [label="SepeteEkle(ID, miktar)", fillcolor="#A0E8A0"];
+    guncelle [label="SepetMiktarGuncelle(ID, miktar)", fillcolor="#A0E8A0"];
+    cikar [label="SepettenCikar(ID)", fillcolor="#A0E8A0"];
+    kupon [label="KuponUygula(kod)", fillcolor="#F7E8D1"];
+    
+    // Yardımcı/Hesaplama Fonksiyonları
+    toplam_kalem [label="SepetKalemleriToplaminiHesapla()", shape=oval, fillcolor="#F7D1D1"];
+    toplam_sepet [label="SepetToplaminiHesapla()", shape=doublecircle, fillcolor="#FFD700"];
+    
+    // Veri İşleme (Helper)
+    ara_toplam_guncelle [label="GUNCELLE SepetKalemiAraToplam()", shape=note, fillcolor="#C3C3E5"];
+    sepet_bul [label="SepetteBul(ID)", shape=note, fillcolor="#C3C3E5"];
+
+
+    // 1. Ürün Ekleme Akışı
+    start -> ekle;
+    ekle -> sepet_bul [label="1. Ürün Var mı?"];
+    sepet_bul -> ara_toplam_guncelle [label="EVET (Miktar Güncelle)"];
+    sepet_bul -> ara_toplam_guncelle [label="HAYIR (Yeni Kalem Ekle)"];
+
+    // 2. Miktar Güncelleme Akışı
+    guncelle -> sepet_bul;
+    
+    // 3. İndirim Uygulama Akışı
+    kupon -> toplam_kalem [label="Genel İndirim Hesaplama"];
+    
+    // 4. Nihai Toplam Hesaplama Akışı
+    toplam_kalem -> toplam_sepet [label="Ara Toplamı Kullan"];
+
+    // Bütün ana işlevler sepetin güncellenmesine ve toplam hesaplamaya yol açar.
+    ara_toplam_guncelle -> toplam_sepet;
+    cikar -> toplam_sepet;
+    kupon -> toplam_sepet;
+    
+    // En son nihai toplamı hesapla
+    toplam_sepet -> end [label="Nihai Fiyatı Göster"];
+}
