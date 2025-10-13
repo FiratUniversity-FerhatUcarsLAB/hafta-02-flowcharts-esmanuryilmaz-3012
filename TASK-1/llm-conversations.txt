@@ -1,0 +1,292 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+
+Ödevi ChatGPT ile yaptım. Kendisine verdiğim ilk komut "ATM para çekme sistemi için bana bir pseudocode yaz" oldu.
+ChatGPT'nin cevabı:
+# ATM — Nakit Çekme İşlemi (Pseudocode)
+
+Aşağıda gerçek dünyada karşılaşılabilecek hata durumlarını, güvenlik kontrollerini ve yardımcı fonksiyonları içeren detaylı ama okunabilir bir pseudocode bulacaksın. İhtiyacına göre basitleştirebilir veya genişletebilirsin.
+
+---
+
+## Ana Akış (WithdrawCash)
+
+```
+FUNCTION WithdrawCash(card, enteredPIN, requestedAmount):
+    // 1. Kart takılı mı ve okunuyor mu?
+    IF NOT CardPresent(card):
+        RETURN Error("Kart takılı değil veya okunamıyor")
+
+    // 2. Kart bloke/yasak/expire kontrolü
+    IF IsCardBlocked(card) OR IsCardExpired(card):
+        RetainCard(card)     // isteğe bağlı: şüpheli durumlarda kartı al
+        RETURN Error("Kart kullanımına izin verilmiyor")
+
+    // 3. PIN doğrulama (sınır: 3 hatalı deneme gibi)
+    pinResult = VerifyPIN(card, enteredPIN)
+    IF pinResult == "LOCKED":
+        RetainCard(card)
+        RETURN Error("Kart kilitlendi: PIN deneme limitine ulaşıldı")
+    ELSE IF pinResult == "INVALID":
+        RETURN Error("Yanlış PIN")
+
+    // 4. İstenilen miktar validasyonu (pozitif, ATM modülü tarafından verilebilen en düşük/çokluk)
+    IF requestedAmount <= 0:
+        RETURN Error("Geçersiz tutar")
+
+    IF requestedAmount % MinimumDenomination() != 0:
+        RETURN Error("Tutar ATM tarafından verilebilen banknot cinslerine uygun değil")
+
+    // 5. Günlük/işlem limitleri kontrolü
+    IF requestedAmount > GetRemainingDailyLimit(card.account):
+        RETURN Error("Günlük limit aşıldı")
+
+    // 6. Hesap bakiyesi kontrolü (hesap + varsa önceden ayrılmış çekimler)
+    availableBalance = GetAvailableBalance(card.account)
+    IF requestedAmount > availableBalance:
+        RETURN Error("Yetersiz bakiye")
+
+    // 7. ATM nakit/denominasyon kontrolü
+    denominations = GetATMDenominationStatus()
+    IF NOT CanDispenseAmount(denominations, requestedAmount):
+        RETURN Error("ATM bu tutarı verecek yeterli banknota sahip değil")
+
+    // 8. Ön rezervasyon: banka tarafında tutarı "hold" et
+    holdResult = PlaceHoldOnAccount(card.account, requestedAmount)
+    IF holdResult == FAILURE:
+        RETURN Error("Hesap üzerinde işlem yapılamıyor. Lütfen banka ile iletişime geçin")
+
+    // 9. Nakit verme denemesi (cihaz kontrolü)
+    dispenseResult = DispenseCash(requestedAmount, denominations)
+    IF dispenseResult == SUCCESS:
+        // 9a. Başarılı -> hold'u tamamla (post-authorization) ve işlem kaydet
+        CompleteHoldAndDebit(card.account, requestedAmount)
+        LogTransaction(card.account, "WITHDRAWAL", requestedAmount, Status="SUCCESS")
+        PrintReceipt(card.account, requestedAmount, remainingBalance = GetAvailableBalance(card.account))
+        EjectCard(card)
+        RETURN Success("Para başarıyla verildi")
+    ELSE:
+        // 9b. Başarısız -> rollback (hold iptal), hata yönetimi
+        CancelHoldOnAccount(card.account, requestedAmount)
+        LogTransaction(card.account, "WITHDRAWAL", requestedAmount, Status="FAILED", reason=dispenseResult.reason)
+
+        IF dispenseResult.reason == "JAM" OR dispenseResult.reason == "MECHANICAL_FAILURE":
+            LockATMForService()
+            RetainCardIfNeeded(card, condition="safety")
+            RETURN Error("ATM arızası: kartınız güvende. Lütfen bankayla iletişime geçin")
+        ELSE:
+            RETURN Error("İşlem başarısız oldu: " + dispenseResult.reason)
+```
+
+---
+
+## Yardımcı Fonksiyonlar / Modüller
+
+```
+FUNCTION CardPresent(card):
+    // Kart okuyucudan veri al, fiziken takılı mı
+    RETURN cardReader.isCardInserted()
+
+FUNCTION IsCardBlocked(card):
+    // Banka sistemiyle kontrol et
+    RETURN BankAPI.checkCardStatus(card.id) == "BLOCKED"
+
+FUNCTION IsCardExpired(card):
+    RETURN card.expiryDate < Today()
+
+FUNCTION VerifyPIN(card, enteredPIN):
+    attempts = IncrementAndGetPINAttempts(card)
+    IF attempts > MAX_PIN_ATTEMPTS:
+        BankAPI.lockCard(card.id)
+        RETURN "LOCKED"
+    IF BankAPI.verifyPIN(card.id, enteredPIN) == True:
+        ResetPINAttempts(card)
+        RETURN "OK"
+    ELSE:
+        RETURN "INVALID"
+
+FUNCTION GetAvailableBalance(account):
+    // Hesap üzerindeki anlık kullanılabilir bakiye (teminat/hold düşülmüş)
+    RETURN BankAPI.getAvailableBalance(account.id)
+
+FUNCTION GetRemainingDailyLimit(account):
+    dailyLimit = BankRules.getDailyWithdrawalLimit(account.type)
+    usedToday = BankAPI.getWithdrawnAmountToday(account.id)
+    RETURN dailyLimit - usedToday
+
+FUNCTION MinimumDenomination():
+    // ATM'nin verdiği en küçük banknot (ör. 20 TL)
+    RETURN ATMConfig.minNote
+
+FUNCTION GetATMDenominationStatus():
+    // ATM'nin her banknot cinsinden kaç tane olduğunu döner
+    RETURN CashModule.getDenominations()   // {200:5,100:10,50:20,20:50,...}
+
+FUNCTION CanDispenseAmount(denominations, amount):
+    // Basit greedy ya da DP ile verilebilirlik kontrolü
+    RETURN DispensePlanner.canMakeAmount(denominations, amount)
+
+FUNCTION PlaceHoldOnAccount(account, amount):
+    RETURN BankAPI.placeHold(account.id, amount)
+
+FUNCTION CancelHoldOnAccount(account, amount):
+    RETURN BankAPI.cancelHold(account.id, amount)
+
+FUNCTION CompleteHoldAndDebit(account, amount):
+    RETURN BankAPI.captureHoldAndDebit(account.id, amount)
+
+FUNCTION DispenseCash(amount, denominations):
+    // DispensePlanner seçimi yapar -> CashModule.releaseNotes(plan)
+    plan = DispensePlanner.plan(denominations, amount)
+    IF plan == NONE:
+        RETURN Failure(reason="DENOM_NOT_AVAILABLE")
+    result = CashModule.releaseNotes(plan)
+    IF result == OK:
+        RETURN Success()
+    ELSE:
+        RETURN Failure(reason=result.error)
+
+FUNCTION LogTransaction(account, type, amount, Status, reason=None):
+    log = {timestamp:Now(), account:account.id, type:type, amount:amount, status:Status, reason:reason}
+    AuditLogger.write(log)
+    BankAPI.recordTransaction(log)
+
+FUNCTION PrintReceipt(account, amount, remainingBalance):
+    receipt = FormatReceipt(account, amount, remainingBalance)
+    Printer.print(receipt)
+
+FUNCTION EjectCard(card):
+    cardReader.eject()
+
+FUNCTION RetainCard(card):
+    cardReader.retainCard()
+
+FUNCTION RetainCardIfNeeded(card, condition):
+    IF condition == "safety":
+        RetainCard(card)
+```
+
+---
+
+## Notlar — Güvenlik & Hata Senaryoları
+
+* PIN doğrulama üçüncü taraf (bank) sunucularında olmalı; ATM sadece iletir, PIN asla düz metin loglanmamalı.
+* Ağ kesintilerinde çevrimdışı (offline) işlem yapılması risklidir — çoğu ATM çevrimdışı nakit verme için önceden onaylanmış limitler kullanır; bunu sistem tasarımına eklemelisin.
+* Her başarılı/başarısız işlem audit log'a yazılmalı (zaman damgası, ATM ID, hatalar).
+* Nakit verme sırasında mekanik arıza olursa hold iptal edilip müşteri bilgilendirilmeli, gerektiğinde kart bankaya bildirilip bloke edilebilir.
+* İşlem idempotent olmalı: aynı işlem birden fazla kez yürütülse bile çift debit olmamalı (transaction IDs ile).
+
+---
+
+İstersen:
+
+* Bu pseudocode'u belirli bir programlama diline (Java, Python, C#) çevirebilirim.
+* Veya `CanDispenseAmount` için greedy yerine dynamic programming (coin change) ile örnek kod yazayım.
+  Hangi adımı daha ayrıntılı istersin?
+
+ChatGPT'nin bu cevabı fazlasıyla güzel ama fazlasıyla detaylı ve çok fonksiyonluydu. O yüzden basitleştirmesini istedim.
+
+ChatGPT'nin cevabı:
+
+Tabii 😊 İşte **ATM para çekme sistemi** için **basitleştirilmiş bir pseudocode**:
+
+---
+
+## 💳 ATM Para Çekme (Basit Pseudocode)
+
+```
+BAŞLA
+
+1. Kullanıcı kartı takar
+2. "PIN kodunuzu girin" mesajı göster
+3. PIN = kullanıcıdan al
+
+4. Eğer PIN doğru değilse
+       3 defa yanlış girilirse kartı al ve işlemi bitir
+       aksi halde tekrar PIN iste
+   DEĞİLSE devam et
+
+5. "Çekmek istediğiniz miktarı girin" mesajı göster
+6. Miktar = kullanıcıdan al
+
+7. Eğer miktar 0 veya negatifse
+       "Geçersiz tutar" yaz ve işlemi bitir
+
+8. Eğer miktar kullanıcının bakiyesinden büyükse
+       "Yetersiz bakiye" yaz ve işlemi bitir
+
+9. Eğer ATM’de yeterli para yoksa
+       "ATM’de yeterli para yok" yaz ve işlemi bitir
+
+10. Bankadan kullanıcının hesabından miktarı düş
+11. ATM nakit verir (miktar kadar)
+12. Yeni bakiye ekranda göster
+13. İstenirse makbuz yazdır
+14. Kartı geri ver
+
+BİTİR
+```
+
+---
+
+İstersen bu sade yapıyı biraz daha **akış diyagramı (flowchart)** biçiminde de gösterebilirim.
+Böyle bir görsel ister misin?
+
+Bunu inceledikten sonra başka bir şey eklemeye gerek duymadan DOT kodunu çıkarmak için yeni bir komut verdim, "şimdi bunu dot koduna çevir".
+
+ChatGPT'nin cevabı:
+
+Tabii 😊
+Aşağıda yukarıdaki **basit ATM para çekme pseudocode’unun** akışını gösteren **Graphviz DOT kodu** var.
+Bu kodu `.dot` uzantılı bir dosyaya kaydedip [Graphviz](https://dreampuf.github.io/GraphvizOnline/) gibi bir araçta görüntüleyebilirsin.
+
+---
+
+```dot
+digraph ATM_Para_Cekme {
+    rankdir=TB;
+    node [shape=rectangle, fontname="Arial"];
+
+    Start [label="BAŞLA", shape=oval];
+    Card [label="Kullanıcı kartı takar"];
+    PIN [label="PIN kodu girilir"];
+    CheckPIN [label="PIN doğru mu?", shape=diamond];
+    WrongPIN [label="PIN yanlış\n(3 defa yanlışsa kartı al)"];
+    Amount [label="Çekilmek istenen miktar girilir"];
+    CheckAmount [label="Tutar geçerli mi? (0 veya - değil)", shape=diamond];
+    CheckBalance [label="Bakiye yeterli mi?", shape=diamond];
+    CheckATM [label="ATM'de yeterli para var mı?", shape=diamond];
+    Withdraw [label="Bankadan miktarı düş\nATM nakit verir"];
+    ShowBalance [label="Yeni bakiye gösterilir"];
+    Receipt [label="Makbuz ister mi?", shape=diamond];
+    PrintReceipt [label="Makbuz yazdırılır"];
+    ReturnCard [label="Kart geri verilir"];
+    End [label="BİTİR", shape=oval];
+
+    // Akış bağlantıları
+    Start -> Card -> PIN -> CheckPIN;
+    CheckPIN -> WrongPIN [label="Hayır"];
+    WrongPIN -> PIN [label="Deneme < 3"];
+    WrongPIN -> End [label="3 defa yanlış"];
+
+    CheckPIN -> Amount [label="Evet"];
+    Amount -> CheckAmount;
+    CheckAmount -> End [label="Hayır"];
+    CheckAmount -> CheckBalance [label="Evet"];
+    CheckBalance -> End [label="Hayır"];
+    CheckBalance -> CheckATM [label="Evet"];
+    CheckATM -> End [label="Hayır"];
+    CheckATM -> Withdraw [label="Evet"];
+    Withdraw -> ShowBalance -> Receipt;
+    Receipt -> PrintReceipt [label="Evet"];
+    Receipt -> ReturnCard [label="Hayır"];
+    PrintReceipt -> ReturnCard -> End;
+}
+```
+
+---
+
+İstersen bu akışa “günlük limit kontrolü” veya “ATM hata durumu” gibi ek adımlar da ekleyebilirim.
+Böyle geliştirilmiş bir sürüm ister misin?
+
+Bu ödev için ChatGPT ile konuşmalarım bu kadardı.
