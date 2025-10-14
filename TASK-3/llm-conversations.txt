@@ -1,0 +1,377 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+Bu ödevi yaparken Microsoft Copilot kullandım.
+Başlangıç olarak ise bana bir pseudocode yazmasını istedim. "hastane randevu sistemi için uygun bir pseudocode yaz"
+Copilot'un cevabı:
+Elbette! İşte temel bir hastane randevu sistemi için uygun bir pseudocode örneği. Bu yapı, hasta kaydı, doktor seçimi, randevu oluşturma ve listeleme gibi temel işlevleri kapsar:
+
+```plaintext
+Başla
+
+Fonksiyon AnaMenu()
+    Yazdır "1. Hasta Kaydı"
+    Yazdır "2. Randevu Al"
+    Yazdır "3. Randevuları Görüntüle"
+    Yazdır "4. Çıkış"
+    Seçim ← KullanıcıdanGirdiAl()
+
+    Eğer Seçim = 1 ise
+        HastaKaydi()
+    Eğer Seçim = 2 ise
+        RandevuAl()
+    Eğer Seçim = 3 ise
+        RandevuListele()
+    Eğer Seçim = 4 ise
+        Yazdır "Çıkılıyor..."
+        Çık
+    Aksi halde
+        Yazdır "Geçersiz seçim!"
+        AnaMenu()
+    SonEğer
+SonFonksiyon
+
+Fonksiyon HastaKaydi()
+    Yazdır "Hasta Adı:"
+    Ad ← KullanıcıdanGirdiAl()
+    Yazdır "TC Kimlik No:"
+    TC ← KullanıcıdanGirdiAl()
+    HastaListesi'ne (Ad, TC) ekle
+    Yazdır "Kayıt başarılı!"
+    AnaMenu()
+SonFonksiyon
+
+Fonksiyon RandevuAl()
+    Yazdır "TC Kimlik No giriniz:"
+    TC ← KullanıcıdanGirdiAl()
+    Eğer TC HastaListesi'nde yoksa
+        Yazdır "Hasta bulunamadı!"
+        AnaMenu()
+    SonEğer
+
+    Yazdır "Bölüm seçiniz: (Kardiyoloji, Dahiliye, Ortopedi)"
+    Bolum ← KullanıcıdanGirdiAl()
+    Yazdır "Tarih giriniz (GG/AA/YYYY):"
+    Tarih ← KullanıcıdanGirdiAl()
+    Yazdır "Saat giriniz (HH:MM):"
+    Saat ← KullanıcıdanGirdiAl()
+
+    RandevuListesi'ne (TC, Bolum, Tarih, Saat) ekle
+    Yazdır "Randevu başarıyla oluşturuldu!"
+    AnaMenu()
+SonFonksiyon
+
+Fonksiyon RandevuListele()
+    Yazdır "TC Kimlik No giriniz:"
+    TC ← KullanıcıdanGirdiAl()
+    Yazdır "Randevularınız:"
+    Her randevu içinde RandevuListesi
+        Eğer randevu.TC = TC ise
+            Yazdır randevu.Bolum + " - " + randevu.Tarih + " " + randevu.Saat
+        SonEğer
+    SonHer
+    AnaMenu()
+SonFonksiyon
+
+AnaMenu()
+
+Bitir
+```
+
+Bu pseudocode, temel bir konsol tabanlı randevu sisteminin mantığını gösterir. Gerçek bir uygulamada veritabanı bağlantısı, doğrulama, hata kontrolü ve kullanıcı arayüzü gibi ek bileşenler de gerekir. İstersen bunu Python, Java veya başka bir dile çevirebilirim. Hangisini tercih edersin?
+
+"tekrar yazabilir misin bu bana çok karmaşık geldi ve pseudocode'u yazdıktan sonra biraz sistemi açıklayabilirsen çok iyi olur"
+Copilot'un cevabı:
+Tabii Esmanur, daha sade ve anlaşılır bir şekilde yazayım. Aşağıda temel bir hastane randevu sistemi için basit bir pseudocode ve ardından kısa bir açıklama bulabilirsin:
+
+---
+
+### 🩺 **Basit Hastane Randevu Sistemi – Pseudocode**
+
+```plaintext
+BAŞLA
+
+HastaListesi ← boş liste
+RandevuListesi ← boş liste
+
+FONKSİYON AnaMenu()
+    YAZDIR "1. Yeni Hasta Kaydı"
+    YAZDIR "2. Randevu Al"
+    YAZDIR "3. Randevuları Gör"
+    YAZDIR "4. Çıkış"
+    SEÇİM ← GİRİŞ AL
+
+    EĞER SEÇİM = 1 İSE
+        HastaKaydi()
+    EĞER SEÇİM = 2 İSE
+        RandevuAl()
+    EĞER SEÇİM = 3 İSE
+        RandevulariGoster()
+    EĞER SEÇİM = 4 İSE
+        ÇIKIŞ
+    DEĞİLSE
+        YAZDIR "Geçersiz seçim!"
+        AnaMenu()
+    SON
+SON
+
+FONKSİYON HastaKaydi()
+    YAZDIR "Adınızı girin:"
+    AD ← GİRİŞ AL
+    YAZDIR "TC Kimlik No girin:"
+    TC ← GİRİŞ AL
+    HastaListesi'ne (AD, TC) EKLE
+    YAZDIR "Kayıt tamamlandı."
+    AnaMenu()
+SON
+
+FONKSİYON RandevuAl()
+    YAZDIR "TC Kimlik No girin:"
+    TC ← GİRİŞ AL
+    EĞER TC HastaListesi'nde YOKSA
+        YAZDIR "Hasta bulunamadı."
+        AnaMenu()
+    SON
+
+    YAZDIR "Bölüm seçin (örnek: Kardiyoloji):"
+    BOLUM ← GİRİŞ AL
+    YAZDIR "Tarih girin (GG/AA/YYYY):"
+    TARIH ← GİRİŞ AL
+    YAZDIR "Saat girin (örnek: 14:00):"
+    SAAT ← GİRİŞ AL
+
+    RandevuListesi'ne (TC, BOLUM, TARIH, SAAT) EKLE
+    YAZDIR "Randevu oluşturuldu."
+    AnaMenu()
+SON
+
+FONKSİYON RandevulariGoster()
+    YAZDIR "TC Kimlik No girin:"
+    TC ← GİRİŞ AL
+    YAZDIR "Randevularınız:"
+    HER RANDEVU İÇİN RandevuListesi
+        EĞER RANDEVU.TC = TC İSE
+            YAZDIR RANDEVU.BOLUM + " - " + RANDEVU.TARIH + " " + RANDEVU.SAAT
+        SON
+    SON
+    AnaMenu()
+SON
+
+AnaMenu()
+
+BİTİR
+```
+
+---
+
+### 🧾 Sistem Açıklaması (Basitçe)
+
+Bu sistem 3 temel işlemi yapar:
+
+1. **Hasta Kaydı**  
+   - Kullanıcıdan ad ve TC kimlik numarası alınır.  
+   - Bu bilgiler bir listeye eklenir.
+
+2. **Randevu Alma**  
+   - TC numarası girilerek hastanın kayıtlı olup olmadığı kontrol edilir.  
+   - Kayıtlıysa bölüm, tarih ve saat bilgileri alınır.  
+   - Randevu listesine eklenir.
+
+3. **Randevuları Görüntüleme**  
+   - TC numarası girilerek o kişiye ait tüm randevular listelenir.
+
+Bu yapı, temel bir randevu sisteminin mantığını sade bir şekilde gösterir. Gerçek bir uygulamada kullanıcı arayüzü, veri doğrulama ve zaman çakışması kontrolü gibi ek özellikler de eklenebilir.
+
+İstersen bunu Python gibi bir programlama diline çevirebiliriz ya da sistemin nasıl geliştirilebileceğini konuşabiliriz. Hangisiyle devam edelim?
+
+Burada özellikle açıklamayı okuduktan sonra (ve de sistem daha sade ve anlaşılır yazıldığından) daha rahat sistemin mantığını anladım.Eksik gördüğüm ise tek bir şey vardı, onun için yeniden bir komut verdim. "bu seferki daha anlaşılır teşekkür ederim ama randevu iptali seçeneği de ekleyebilir misin?"
+Copilot'un cevabı:
+Tabii Esmanur, memnuniyetle! Aşağıda randevu iptali özelliği eklenmiş, sade ve anlaşılır bir hastane randevu sistemi pseudocode'u yer alıyor. Bu sürüm, kullanıcı dostu bir menüyle birlikte artık randevu iptalini de destekliyor.
+
+---
+
+### 🏥 Güncellenmiş Hastane Randevu Sistemi – Pseudocode
+
+```plaintext
+BAŞLA
+
+HastaListesi ← boş liste
+RandevuListesi ← boş liste
+
+FONKSİYON AnaMenu()
+    YAZDIR "1. Yeni Hasta Kaydı"
+    YAZDIR "2. Randevu Al"
+    YAZDIR "3. Randevuları Gör"
+    YAZDIR "4. Randevu İptal Et"
+    YAZDIR "5. Çıkış"
+    SEÇİM ← GİRİŞ AL
+
+    EĞER SEÇİM = 1 İSE
+        HastaKaydi()
+    EĞER SEÇİM = 2 İSE
+        RandevuAl()
+    EĞER SEÇİM = 3 İSE
+        RandevulariGoster()
+    EĞER SEÇİM = 4 İSE
+        RandevuIptal()
+    EĞER SEÇİM = 5 İSE
+        YAZDIR "Sistemden çıkılıyor..."
+        ÇIKIŞ
+    DEĞİLSE
+        YAZDIR "Geçersiz seçim! Lütfen tekrar deneyin."
+        AnaMenu()
+    SON
+SON
+
+FONKSİYON HastaKaydi()
+    YAZDIR "Adınızı girin:"
+    AD ← GİRİŞ AL
+    YAZDIR "TC Kimlik No girin:"
+    TC ← GİRİŞ AL
+    HastaListesi'ne (AD, TC) EKLE
+    YAZDIR "Kayıt başarıyla tamamlandı."
+    AnaMenu()
+SON
+
+FONKSİYON RandevuAl()
+    YAZDIR "TC Kimlik No girin:"
+    TC ← GİRİŞ AL
+    EĞER TC HastaListesi'nde YOKSA
+        YAZDIR "Bu TC ile kayıtlı hasta bulunamadı."
+        AnaMenu()
+    SON
+
+    YAZDIR "Bölüm seçin (örnek: Kardiyoloji):"
+    BOLUM ← GİRİŞ AL
+    YAZDIR "Tarih girin (GG/AA/YYYY):"
+    TARIH ← GİRİŞ AL
+    YAZDIR "Saat girin (örnek: 14:00):"
+    SAAT ← GİRİŞ AL
+
+    RandevuListesi'ne (TC, BOLUM, TARIH, SAAT) EKLE
+    YAZDIR "Randevunuz başarıyla oluşturuldu."
+    AnaMenu()
+SON
+
+FONKSİYON RandevulariGoster()
+    YAZDIR "TC Kimlik No girin:"
+    TC ← GİRİŞ AL
+    YAZDIR "Randevularınız:"
+    RANDEVU_SAYISI ← 0
+    HER RANDEVU İÇİN RandevuListesi
+        EĞER RANDEVU.TC = TC İSE
+            YAZDIR RANDEVU.BOLUM + " - " + RANDEVU.TARIH + " " + RANDEVU.SAAT
+            RANDEVU_SAYISI ← RANDEVU_SAYISI + 1
+        SON
+    SON
+    EĞER RANDEVU_SAYISI = 0 İSE
+        YAZDIR "Kayıtlı randevunuz bulunmamaktadır."
+    SON
+    AnaMenu()
+SON
+
+FONKSİYON RandevuIptal()
+    YAZDIR "TC Kimlik No girin:"
+    TC ← GİRİŞ AL
+    YAZDIR "İptal etmek istediğiniz randevunun tarihini girin (GG/AA/YYYY):"
+    TARIH ← GİRİŞ AL
+    YAZDIR "Saatini girin (örnek: 14:00):"
+    SAAT ← GİRİŞ AL
+
+    RandevuBulundu ← YANLIŞ
+    HER RANDEVU İÇİN RandevuListesi
+        EĞER RANDEVU.TC = TC VE RANDEVU.TARIH = TARIH VE RANDEVU.SAAT = SAAT İSE
+            RandevuListesi'nden RANDEVU'yu SİL
+            RandevuBulundu ← DOĞRU
+            YAZDIR "Randevunuz başarıyla iptal edildi."
+            KIR
+        SON
+    SON
+
+    EĞER RandevuBulundu = YANLIŞ İSE
+        YAZDIR "Belirtilen bilgilerle eşleşen bir randevu bulunamadı."
+    SON
+
+    AnaMenu()
+SON
+
+AnaMenu()
+
+BİTİR
+```
+
+---
+
+### 🧾 Sistem Açıklaması – Randevu İptali Nasıl İşliyor?
+
+Yeni eklenen **Randevu İptal Et** fonksiyonu, kullanıcının daha önce aldığı bir randevuyu kolayca iptal etmesini sağlar. İşleyiş şu şekildedir:
+
+- Kullanıcı TC kimlik numarasını girer.
+- İptal etmek istediği randevunun tarih ve saatini belirtir.
+- Sistem, bu bilgilerle eşleşen bir randevu arar.
+- Eşleşme bulunursa, randevu listeden silinir ve kullanıcıya bilgi verilir.
+- Eğer eşleşme bulunamazsa, kullanıcıya uyarı mesajı gösterilir.
+
+Bu özellik, özellikle kullanıcıların plan değişikliklerinde sistem üzerinden kolayca işlem yapabilmesini sağlar. Gerçek bir uygulamada bu işlem, veritabanı üzerinden güvenli bir şekilde yapılır ve kullanıcıya onay mesajı gönderilebilir.
+
+İstersen bir sonraki adımda bu sistemi Python gibi bir dile çevirebiliriz ya da kullanıcı arayüzü (örneğin mobil uygulama veya web ekranı) tasarımı üzerine konuşabiliriz. Hangisi ilgini çeker?
+
+"güzel şimdi de senden bunun dot kodunu çıkarmanı istiyorum"
+Copilot'un cevabı:
+Elbette Esmanur! Aşağıda, hastane randevu sisteminin temel işleyişini gösteren bir **DOT dili** (Graphviz) kodu yer alıyor. Bu kod, sistemin akışını düğümler (nodes) ve yönlü oklarla (edges) temsil eder:
+
+---
+
+### 🧭 DOT Kodu – Hastane Randevu Sistemi Akış Diyagramı
+
+```dot
+digraph RandevuSistemi {
+    rankdir=LR;
+    node [shape=box, style=filled, color=lightblue];
+
+    AnaMenu -> HastaKaydi [label="1"]
+    AnaMenu -> RandevuAl [label="2"]
+    AnaMenu -> RandevulariGoster [label="3"]
+    AnaMenu -> RandevuIptal [label="4"]
+    AnaMenu -> Cikis [label="5"]
+
+    HastaKaydi -> HastaListesineEkle
+    HastaListesineEkle -> AnaMenu
+
+    RandevuAl -> TCKontrol
+    TCKontrol -> RandevuBilgisiAl [label="Kayıtlıysa"]
+    TCKontrol -> AnaMenu [label="Değilse"]
+
+    RandevuBilgisiAl -> RandevuListesineEkle
+    RandevuListesineEkle -> AnaMenu
+
+    RandevulariGoster -> TCAl
+    TCAl -> ListeleRandevular
+    ListeleRandevular -> AnaMenu
+
+    RandevuIptal -> TCveTarihSaatAl
+    TCveTarihSaatAl -> RandevuAra
+    RandevuAra -> RandevuSil [label="Bulundu"]
+    RandevuAra -> AnaMenu [label="Bulunamadı"]
+    RandevuSil -> AnaMenu
+
+    Cikis [shape=oval, color=lightgray, label="Sistemden Çık"]
+
+    // Başlangıç noktası
+    Start [shape=circle, label="Başla", color=green]
+    Start -> AnaMenu
+}
+```
+
+---
+
+### 📝 Açıklama
+
+- **AnaMenu**: Kullanıcının seçim yaptığı ana ekran.
+- **HastaKaydi**: Yeni hasta bilgisi alınıp listeye eklenir.
+- **RandevuAl**: TC kontrolü yapılır, ardından randevu bilgileri alınır ve kaydedilir.
+- **RandevulariGoster**: TC girilerek ilgili randevular listelenir.
+- **RandevuIptal**: TC, tarih ve saat bilgisiyle randevu aranır ve varsa silinir.
+- **Cikis**: Sistemden çıkış yapılır.
+- **Start**: Sistemin başlangıç noktasıdır.
+
+Bu DOT kodunu bir Graphviz görselleştiriciye yapıştırarak sistemin akış diyagramını görebilirsin. İstersen bu diyagramı görsel olarak da oluşturabiliriz. Hazır mısın?
