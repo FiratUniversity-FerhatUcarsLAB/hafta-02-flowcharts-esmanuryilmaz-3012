@@ -1,0 +1,40 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+Bu ödevi Microsoft Copilot ile yaptım.
+
+digraph RandevuSistemi {
+    rankdir=LR;
+    node [shape=box, style=filled, color=lightblue];
+
+    AnaMenu -> HastaKaydi [label="1"]
+    AnaMenu -> RandevuAl [label="2"]
+    AnaMenu -> RandevulariGoster [label="3"]
+    AnaMenu -> RandevuIptal [label="4"]
+    AnaMenu -> Cikis [label="5"]
+
+    HastaKaydi -> HastaListesineEkle
+    HastaListesineEkle -> AnaMenu
+
+    RandevuAl -> TCKontrol
+    TCKontrol -> RandevuBilgisiAl [label="Kayıtlıysa"]
+    TCKontrol -> AnaMenu [label="Değilse"]
+
+    RandevuBilgisiAl -> RandevuListesineEkle
+    RandevuListesineEkle -> AnaMenu
+
+    RandevulariGoster -> TCAl
+    TCAl -> ListeleRandevular
+    ListeleRandevular -> AnaMenu
+
+    RandevuIptal -> TCveTarihSaatAl
+    TCveTarihSaatAl -> RandevuAra
+    RandevuAra -> RandevuSil [label="Bulundu"]
+    RandevuAra -> AnaMenu [label="Bulunamadı"]
+    RandevuSil -> AnaMenu
+
+    Cikis [shape=oval, color=lightgray, label="Sistemden Çık"]
+
+    // Başlangıç noktası
+    Start [shape=circle, label="Başla", color=green]
+    Start -> AnaMenu
+}
