@@ -1,0 +1,68 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+Bu ödevi ChatGPT ile yaptım.
+
+digraph AkilliKapiZili {
+    rankdir=TB;
+    node [shape=rectangle, style=rounded, fontname="Arial"];
+
+    Basla [label="BAŞLA"];
+    Baglantilar [label="Kamera, mikrofon, hoparlör,\n zili, uygulama, akıllı kilit,\n veritabanı ve sensörleri başlat"];
+    Dongu [label="SÜREKLİ OLARAK"];
+    HareketAlgila [label="Hareket sensörü hareket algıladı mı?", shape=diamond];
+    KayitBaslat [label="Kamera kaydı başlat"];
+    GoruntuAnaliz [label="Görüntüyü analiz et"];
+    YuzTanima [label="Yüz tanıma işlemi"];
+    TanimliMi [label="Yüz veritabanında kayıtlı mı?", shape=diamond];
+    BildirTanimli [label="Uygulama'ya bildir:\nTanıdık kişi kapıda"];
+    BildirTanimliDegil [label="Uygulama'ya bildir:\nBilinmeyen kişi kapıda"];
+    ZilBasildiMi [label="Zil düğmesine basıldı mı?", shape=diamond];
+    AnlikGoruntu [label="Kamera ile anlık görüntü al"];
+    IletisimBaslat [label="Mikrofon ve hoparlör ile iletişim başlat"];
+    CanliGoruntu [label="Uygulama'ya canlı görüntü gönder"];
+    GeceModu [label="Gece modu aktif mi?", shape=diamond];
+    IsikAc [label="Işıkları aç"];
+    KomutKontrol [label="Kullanıcı 'kapıyı aç' komutu gönderdi mi?", shape=diamond];
+    KapiAc [label="Akıllı kilidi aç"];
+    KapiKapali [label="Kapı kapalı kalsın"];
+    KayitKaydet [label="Kaydı buluta kaydet"];
+    UyariKontrol [label="3 kez bilinmeyen yüz algılandı mı?", shape=diamond];
+    GuvenlikUyarisi [label="Acil güvenlik uyarısı gönder"];
+    KaydiIsaretle [label="Kaydı yüksek öncelikli olarak işaretle"];
+    Bitir [label="BİTİR"];
+
+    // Akışlar
+    Basla -> Baglantilar -> Dongu;
+
+    Dongu -> HareketAlgila;
+    HareketAlgila -> KayitBaslat [label="Evet"];
+    HareketAlgila -> ZilBasildiMi [label="Hayır"];
+
+    KayitBaslat -> GoruntuAnaliz -> YuzTanima -> TanimliMi;
+    TanimliMi -> BildirTanimli [label="Evet"];
+    TanimliMi -> BildirTanimliDegil [label="Hayır"];
+    BildirTanimli -> ZilBasildiMi;
+    BildirTanimliDegil -> ZilBasildiMi;
+
+    ZilBasildiMi -> AnlikGoruntu [label="Evet"];
+    ZilBasildiMi -> UyariKontrol [label="Hayır"];
+
+    AnlikGoruntu -> IletisimBaslat -> CanliGoruntu -> GeceModu;
+    GeceModu -> IsikAc [label="Evet"];
+    GeceModu -> KomutKontrol [label="Hayır"];
+    IsikAc -> KomutKontrol;
+
+    KomutKontrol -> KapiAc [label="Evet"];
+    KomutKontrol -> KapiKapali [label="Hayır"];
+
+    KapiAc -> KayitKaydet;
+    KapiKapali -> KayitKaydet;
+    KayitKaydet -> UyariKontrol;
+
+    UyariKontrol -> GuvenlikUyarisi [label="Evet"];
+    UyariKontrol -> Dongu [label="Hayır"];
+
+    GuvenlikUyarisi -> KaydiIsaretle -> Dongu;
+
+    Dongu -> Bitir [style=dashed, label="Sistem durdurulursa"];
+}
