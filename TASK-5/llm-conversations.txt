@@ -1,0 +1,281 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+Bu ödevi ChatGPT ile yaptım.
+Açıkçası bu ödevi yaparken, ev güvenliği sistemleri çok geniş bir alana yayıldığından, tam olarak neyi yapacağımdan emin olamadım. Bu yüzden ChatGPT'ye şunu sorarak başladım."Akıllı ev güvenlik sistemleri denince aklına kameralar ve sensörlerden başka ne geliyor?"
+ChatGPT'nin cevabı:
+Güzel soru — “akıllı ev güvenlik sistemleri” deyince sadece kamera ve sensörlerle sınırlı kalmayan birçok bileşen akla gelir. İşte kameralar ve sensörlerin **dışında** akıllı ev güvenliğinde kullanılan veya ilişkilendirilen bazı önemli bileşenler:
+
+---
+
+### 🔒 **1. Akıllı Kilit Sistemleri**
+
+* Parmak izi, şifre, kart veya cep telefonu ile açılabilen kapı kilitleri.
+* Uzak erişim sayesinde kapıyı uzaktan kilitleme/açma.
+* Kimin ne zaman eve girdiğini kaydedebilir.
+
+---
+
+### 🚪 **2. Akıllı Kapı Zili (Video Doorbell)**
+
+* Kapıya biri geldiğinde bildirim gönderir.
+* Üzerindeki kamera ve mikrofon ile karşılıklı konuşma yapılabilir.
+* Hareket algıladığında video kaydı başlatabilir.
+
+---
+
+### 💡 **3. Akıllı Aydınlatma ve Otomasyon Sistemleri**
+
+* Hareket veya ses algılandığında ışıkları otomatik yakar.
+* Uzaktan kontrol veya zamanlama yapılabilir.
+* Hırsızları caydırmak için evde biri varmış gibi ışıkları açıp kapatabilir.
+
+---
+
+### 🧠 **4. Merkezi Kontrol Ünitesi (Hub / Kontrol Paneli)**
+
+* Tüm güvenlik cihazlarını tek merkezden yönetir.
+* Alarm durumunda siren çalar veya telefon bildirimi gönderir.
+* Bulut bağlantısı veya mobil uygulama üzerinden erişim sağlar.
+
+---
+
+### 📱 **5. Mobil Uygulama ve Uzaktan Erişim**
+
+* Evdeki sistemleri uzaktan kontrol etme.
+* Gerçek zamanlı bildirim ve kamera görüntüsü izleme.
+* Yapay zekâ destekli tehdit analizleri (örneğin kişi tanıma).
+
+---
+
+### 🔊 **6. Akıllı Alarm ve Siren Sistemleri**
+
+* Hırsızlık, yangın veya gaz kaçağı durumunda yüksek sesli uyarı verir.
+* Bazıları ışıklı (LED flaşlı) uyarı sistemleriyle entegre çalışır.
+
+---
+
+### 🔥 **7. Yangın, Duman ve Gaz Dedektörleri**
+
+* Ortamdaki duman, karbonmonoksit veya doğalgaz sızıntısını algılar.
+* Alarm verir, bazı sistemlerde otomatik havalandırma açabilir.
+
+---
+
+### 💧 **8. Su Baskını Sensörleri**
+
+* Boru patlaması veya su sızıntısını erken fark eder.
+* Akıllı vana sistemiyle suyu otomatik kesebilir.
+
+---
+
+### 🧍‍♀️ **9. Yüz Tanıma ve Ses Tanıma Sistemleri**
+
+* Tanınmayan kişileri algılayarak alarm tetikleyebilir.
+* Ev sakinlerinin ses veya yüz verilerini kullanarak erişim kontrolü sağlar.
+
+---
+
+### 🌐 **10. Bulut Tabanlı Güvenlik ve Veri Yedekleme**
+
+* Kamera kayıtlarını güvenli biçimde bulutta depolar.
+* Hırsızlık durumunda kayıtların silinmesini engeller.
+
+---
+
+İstersen bu listeyi “akıllı ev güvenlik sistemlerinin bileşenleri” başlığı altında kısa açıklamalarla ödev formatında düzenleyebilirim — tablo veya madde madde şekilde.
+Hazırlayayım mı?
+
+Burayı dikkatlice okuyup üstüne biraz düşündükten sonra günlük hayatta en çok kullandığımız akıllı kapı zilini yapmya karar verdim. "Bana akıllı kapı zillerine dair basit bir pseudocode yazabilir misin?"
+ChatGPT'nin cevabı:
+Tabii 😊 işte **akıllı kapı zili sistemi** için basit ve anlaşılır bir **pseudocode** örneği:
+
+---
+
+### 💡 **Pseudocode: Akıllı Kapı Zili Sistemi**
+
+```
+BAŞLA
+
+KAMERA, MİKROFON, ZİL_DÜĞMESİ, UYGULAMA bağlantısını başlat
+
+EĞER ZİL_DÜĞMESİ basıldıysa
+    KAMERA ile görüntü al
+    MİKROFON ve HOPARLÖR üzerinden iletişimi başlat
+    UYGULAMA'ya bildirim gönder ("Biri kapıda!")
+    UYGULAMA üzerinden kullanıcıya canlı görüntü gönder
+    EĞER kullanıcı "kapıyı aç" komutu gönderirse
+        AKILLI_KİLİT'i aç
+    DEĞİLSE
+        KİLİT kapalı kalsın
+    SON
+SON
+
+EĞER HAREKET algılandıysa (birisi zili basmadan)
+    KAMERA kayda başla
+    UYGULAMA'ya "hareket algılandı" bildirimi gönder
+SON
+
+BİTİR
+```
+
+---
+
+İstersen bu pseudocode’u **daha gelişmiş hâle** getirebilirim (örneğin yüz tanıma veya gece modu ekleyerek).
+Basit mi kalsın yoksa biraz daha akıllı özelliklerle geliştireyim mi?
+
+"Olur ekle"
+ChatGPT'nin cevabı:
+Harika 👍 O zaman aynı **akıllı kapı zili sistemi** pseudocode’unu bu kez **gelişmiş özelliklerle** (yüz tanıma, gece modu, hareket algılama hassasiyeti, kayıt sistemi vb.) yeniden yazalım:
+
+---
+
+### 🤖 **Gelişmiş Akıllı Kapı Zili Sistemi — Pseudocode**
+
+```
+BAŞLA
+
+KAMERA, MİKROFON, HOPARLÖR, ZİL_DÜĞMESİ, UYGULAMA, AKILLI_KİLİT, VERİTABANI bağlantılarını başlat
+GECE_MODU_SENSÖRÜ, HAREKET_SENSÖRÜ, IŞIKLAR etkinleştir
+
+SÜREKLİ OLARAK:
+    // 1. Hareket Algılama
+    EĞER HAREKET_SENSÖRÜ hareket algılarsa
+        KAMERA kayda başla
+        GÖRÜNTÜYÜ analiz et
+        TANINAN_YÜZ = YÜZ_TANIMA(GÖRÜNTÜ)
+        
+        EĞER TANINAN_YÜZ veritabanında kayıtlıysa
+            UYGULAMA'ya bildir: "Tanıdık kişi kapıda: [İsim]"
+        DEĞİLSE
+            UYGULAMA'ya bildir: "Bilinmeyen kişi kapıda!"
+        SON
+    SON
+
+    // 2. Zil Basıldığında
+    EĞER ZİL_DÜĞMESİ basıldıysa
+        KAMERA ile anlık görüntü al
+        MİKROFON ve HOPARLÖR üzerinden iletişimi başlat
+        UYGULAMA'ya canlı görüntü gönder
+        
+        EĞER GECE_MODU_SENSÖRÜ “karanlık” algılarsa
+            IŞIKLAR’ı aç
+        SON
+
+        EĞER kullanıcı UYGULAMA üzerinden "kapıyı aç" komutu gönderirse
+            AKILLI_KİLİT’i aç
+            UYGULAMA’ya bildir: "Kapı açıldı."
+        DEĞİLSE
+            AKILLI_KİLİT kapalı kalsın
+        SON
+
+        KAMERA kaydını buluta kaydet
+    SON
+
+    // 3. Güvenlik Bildirimleri
+    EĞER art arda 3 kez bilinmeyen yüz algılanırsa
+        UYGULAMA’ya acil güvenlik uyarısı gönder
+        KAMERA kaydını “yüksek öncelikli” olarak işaretle
+    SON
+
+SON_SÜREKLİ
+
+BİTİR
+```
+
+---
+
+Bu sürüm artık **yapay zekâ destekli bir akıllı kapı zili** mantığına daha yakın:
+
+* Yüz tanıma
+* Gece modu
+* Hareket algılama
+* Uygulama bildirimi
+* Akıllı kilit entegrasyonu
+
+İstersen bunu bir **akış diyagramı (flowchart)** veya **.dot (Graphviz)** biçiminde de gösterebilirim, ödev veya sunum için çok şık durur.
+İster misin onu da ekleyeyim?
+
+Sonra ChatGPT'den bunu dot koduna çevirmesini istedim.
+ChatGPT'nin cevabı:
+Tabii 😊 İşte yukarıdaki **“Gelişmiş Akıllı Kapı Zili Sistemi”** pseudocode’unun **Graphviz (DOT) koduna** dönüştürülmüş hali:
+
+---
+
+```dot
+digraph AkilliKapiZili {
+    rankdir=TB;
+    node [shape=rectangle, style=rounded, fontname="Arial"];
+
+    Basla [label="BAŞLA"];
+    Baglantilar [label="Kamera, mikrofon, hoparlör,\n zili, uygulama, akıllı kilit,\n veritabanı ve sensörleri başlat"];
+    Dongu [label="SÜREKLİ OLARAK"];
+    HareketAlgila [label="Hareket sensörü hareket algıladı mı?", shape=diamond];
+    KayitBaslat [label="Kamera kaydı başlat"];
+    GoruntuAnaliz [label="Görüntüyü analiz et"];
+    YuzTanima [label="Yüz tanıma işlemi"];
+    TanimliMi [label="Yüz veritabanında kayıtlı mı?", shape=diamond];
+    BildirTanimli [label="Uygulama'ya bildir:\nTanıdık kişi kapıda"];
+    BildirTanimliDegil [label="Uygulama'ya bildir:\nBilinmeyen kişi kapıda"];
+    ZilBasildiMi [label="Zil düğmesine basıldı mı?", shape=diamond];
+    AnlikGoruntu [label="Kamera ile anlık görüntü al"];
+    IletisimBaslat [label="Mikrofon ve hoparlör ile iletişim başlat"];
+    CanliGoruntu [label="Uygulama'ya canlı görüntü gönder"];
+    GeceModu [label="Gece modu aktif mi?", shape=diamond];
+    IsikAc [label="Işıkları aç"];
+    KomutKontrol [label="Kullanıcı 'kapıyı aç' komutu gönderdi mi?", shape=diamond];
+    KapiAc [label="Akıllı kilidi aç"];
+    KapiKapali [label="Kapı kapalı kalsın"];
+    KayitKaydet [label="Kaydı buluta kaydet"];
+    UyariKontrol [label="3 kez bilinmeyen yüz algılandı mı?", shape=diamond];
+    GuvenlikUyarisi [label="Acil güvenlik uyarısı gönder"];
+    KaydiIsaretle [label="Kaydı yüksek öncelikli olarak işaretle"];
+    Bitir [label="BİTİR"];
+
+    // Akışlar
+    Basla -> Baglantilar -> Dongu;
+
+    Dongu -> HareketAlgila;
+    HareketAlgila -> KayitBaslat [label="Evet"];
+    HareketAlgila -> ZilBasildiMi [label="Hayır"];
+
+    KayitBaslat -> GoruntuAnaliz -> YuzTanima -> TanimliMi;
+    TanimliMi -> BildirTanimli [label="Evet"];
+    TanimliMi -> BildirTanimliDegil [label="Hayır"];
+    BildirTanimli -> ZilBasildiMi;
+    BildirTanimliDegil -> ZilBasildiMi;
+
+    ZilBasildiMi -> AnlikGoruntu [label="Evet"];
+    ZilBasildiMi -> UyariKontrol [label="Hayır"];
+
+    AnlikGoruntu -> IletisimBaslat -> CanliGoruntu -> GeceModu;
+    GeceModu -> IsikAc [label="Evet"];
+    GeceModu -> KomutKontrol [label="Hayır"];
+    IsikAc -> KomutKontrol;
+
+    KomutKontrol -> KapiAc [label="Evet"];
+    KomutKontrol -> KapiKapali [label="Hayır"];
+
+    KapiAc -> KayitKaydet;
+    KapiKapali -> KayitKaydet;
+    KayitKaydet -> UyariKontrol;
+
+    UyariKontrol -> GuvenlikUyarisi [label="Evet"];
+    UyariKontrol -> Dongu [label="Hayır"];
+
+    GuvenlikUyarisi -> KaydiIsaretle -> Dongu;
+
+    Dongu -> Bitir [style=dashed, label="Sistem durdurulursa"];
+}
+```
+
+---
+
+Bu kodu bir `.dot` dosyasına (örneğin `akilli_kapi_zili.dot`) kaydedip şu komutla görselleştirebilirsin:
+
+```bash
+dot -Tpng akilli_kapi_zili.dot -o akilli_kapi_zili.png
+```
+
+Bu işlem sonucunda sistemin **akış diyagramı** PNG olarak oluşturulur 🖼️
+
+İstersen ben sana diyagramın görselini de oluşturabilirim — ister misin görselini çıkarayım?
