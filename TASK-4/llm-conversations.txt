@@ -1,0 +1,369 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+Bu ödevi Google Gemini ile yaptım.
+Verdiğim ilk komut "Bana üniversite ders kaydı için bir pseudocode yaz. Yaklaşık 6 tane ana ders olsun. Bu ana derslerin 4 tanesi şube dersi olsun. Şube dersi olanları için (A ve B şubeleri olmak üzere) sadece iki seçim hakkı  olsun .  15 tane de seçmeli  ders ekle. Her seçmeli ders için ise 4 farklı hoca seçeneği olsun." oldu.
+Gemini'nin cevabı:
+Elbette, üniversite ders kaydı için istenen koşulları içeren bir pseudocode (sözde kod) yazabilirim.
+
+Bu pseudocode, temel olarak kullanıcının dersleri seçme sürecini, şube kısıtlamalarını ve seçmeli derslerdeki hoca seçeneklerini simüle edecektir.
+
+```
+BAŞLA
+
+// Sabitler ve Veri Yapıları Tanımlaması
+SABİTLER:
+    MAX_ANA_DERS_SAYISI = 6
+    MAX_SECIM_HAKKI_SUBE = 2
+    MAX_SECIMLI_DERS_SAYISI = 15
+    MAX_HOCA_SECENEGI = 4
+
+// Ders ve Şube Bilgileri
+ANA_DERSLER_TUMU = [
+    {Ad: "Ders-1", Tipi: "Şube", Şubeler: ["A", "B"], Seçilen_Şube: HİÇBİRİ},
+    {Ad: "Ders-2", Tipi: "Şube", Şubeler: ["A", "B"], Seçilen_Şube: HİÇBİRİ},
+    {Ad: "Ders-3", Tipi: "Şube", Şubeler: ["A", "B"], Seçilen_Şube: HİÇBİRİ},
+    {Ad: "Ders-4", Tipi: "Şube", Şubeler: ["A", "B"], Seçilen_Şube: HİÇBİRİ},
+    {Ad: "Ders-5", Tipi: "Normal"},
+    {Ad: "Ders-6", Tipi: "Normal"}
+]
+
+SECIMLI_DERSLER_TUMU = Dizi_Oluştur(SECIMLI_DERS_SAYISI):
+    Döngü i = 1'den SECIMLI_DERS_SAYISI'e kadar:
+        SECIMLI_DERSLER_TUMU[i] = {
+            Ad: "Seçmeli Ders-" + i,
+            Hocalar: ["Hoca-" + i + "-1", "Hoca-" + i + "-2", "Hoca-" + i + "-3", "Hoca-" + i + "-4"],
+            Seçilen_Hoca: HİÇBİRİ
+        }
+    Döngü_Sonu
+
+// Kayıt Durumu Değişkenleri
+SEÇİLEN_ANA_DERSLER = Boş_Dizi
+SEÇİLEN_SECIMLI_DERSLER = Boş_Dizi
+Kalan_Şube_Seçim_Hakkı = MAX_SECIM_HAKKI_SUBE
+
+// --------------------------------------------------------------------------------
+// ADIM 1: Ana Derslerin Seçimi
+// --------------------------------------------------------------------------------
+
+EKRANA_YAZ("----- Ana Ders Seçimi Başladı -----")
+
+Döngü her DERS için ANA_DERSLER_TUMU içinde:
+    EKRANA_YAZ(DERS.Ad + " dersi otomatik olarak seçildi.")
+    SEÇİLEN_ANA_DERSLER.Ekle(DERS)
+Döngü_Sonu
+
+EKRANA_YAZ("6 Ana dersin tamamı (Ders-1'den Ders-6'ya kadar) listeye eklendi.")
+
+
+// --------------------------------------------------------------------------------
+// ADIM 2: Şubeli Dersler İçin Şube Seçimi
+// --------------------------------------------------------------------------------
+
+EKRANA_YAZ("----- Şubeli Dersler İçin Şube Seçimi Başladı -----")
+EKRANA_YAZ("Şube dersleri için " + Kalan_Şube_Seçim_Hakkı + " adet şube seçme hakkınız bulunmaktadır (Sadece A veya B).")
+
+Döngü her DERS için SEÇİLEN_ANA_DERSLER içinde:
+    Eğer DERS.Tipi == "Şube" İse:
+        EKRANA_YAZ(" ")
+        EKRANA_YAZ(DERS.Ad + " için şube seçimi:")
+
+        Şube_Seçildi = YANLIŞ
+        Döngü_Sayacı = 0
+        
+        // Şube seçimi döngüsü, sadece doğru bir seçim yapılana kadar döner
+        Döngü Şube_Seçildi == YANLIŞ İken:
+            Döngü_Sayacı = Döngü_Sayacı + 1
+            
+            // Eğer seçim hakkı bitti ve hala doğru şube seçilemediyse veya bu ders için hala şube seçilemediyse
+            Eğer Döngü_Sayacı > 1 VE Kalan_Şube_Seçim_Hakkı == 0 İse:
+                EKRANA_YAZ("Hakkınız kalmadı veya geçersiz deneme. " + DERS.Ad + " için şube seçimi atlanıyor.")
+                DURDUR_DÖNGÜ
+            
+            EKRANA_YAZ("Mevcut şubeler: " + DERS.Şubeler.Birleştir(" ve "))
+            SEÇİM = KULLANICIDAN_GİRİŞ_AL("Lütfen " + DERS.Ad + " için şube seçiminizi girin (A/B):")
+
+            Eğer SEÇİM == "A" VEYA SEÇİM == "B" İse:
+                Eğer Kalan_Şube_Seçim_Hakkı > 0 İse:
+                    DERS.Seçilen_Şube = SEÇİM
+                    Kalan_Şube_Seçim_Hakkı = Kalan_Şube_Seçim_Hakkı - 1
+                    Şube_Seçildi = DOĞRU
+                    EKRANA_YAZ(DERS.Ad + " dersi için " + SEÇİM + " şubesi seçildi.")
+                    EKRANA_YAZ("Kalan şube seçim hakkı: " + Kalan_Şube_Seçim_Hakkı)
+                Başka Durumda:
+                    EKRANA_YAZ("Üzgünüm, şube seçme hakkınız (2 hak) dolmuştur. Bu derste herhangi bir şube seçilemedi.")
+                    Şube_Seçildi = DOĞRU // Döngüden çıkmak için
+            Başka Durumda:
+                EKRANA_YAZ("Geçersiz şube seçimi. Lütfen 'A' veya 'B' giriniz.")
+        Döngü_Sonu
+
+    Döngü_Sonu
+
+EKRANA_YAZ("----- Şube Seçimi Tamamlandı -----")
+
+
+// --------------------------------------------------------------------------------
+// ADIM 3: Seçmeli Derslerin ve Hocaların Seçimi
+// --------------------------------------------------------------------------------
+
+EKRANA_YAZ("----- Seçmeli Ders Seçimi Başladı (Toplam 15 Ders) -----")
+
+Döngü her DERS için SECIMLI_DERSLER_TUMU içinde:
+    EKRANA_YAZ(" ")
+    EKRANA_YAZ(DERS.Ad + " dersi seçimi:")
+    
+    // Basitlik için, her seçmeli dersin seçileceğini varsayıyoruz
+    SEÇİLEN_SECIMLI_DERSLER.Ekle(DERS)
+    
+    EKRANA_YAZ("Mevcut Hocalar:")
+    Döngü i = 1'den MAX_HOCA_SECENEGI'e kadar:
+        EKRANA_YAZ(i + ": " + DERS.Hocalar[i-1])
+    Döngü_Sonu
+    
+    Hoca_Seçildi = YANLIŞ
+    Döngü Hoca_Seçildi == YANLIŞ İken:
+        SEÇİM = KULLANICIDAN_GİRİŞ_AL("Lütfen " + DERS.Ad + " için hoca seçiminizi girin (1-" + MAX_HOCA_SECENEGI + "):")
+        
+        // Girişi sayıya çevirmeye çalış
+        SAYISAL_SEÇİM = Sayıya_Çevir(SEÇİM)
+        
+        Eğer SAYISAL_SEÇİM >= 1 VE SAYISAL_SEÇİM <= MAX_HOCA_SECENEGI İse:
+            DERS.Seçilen_Hoca = DERS.Hocalar[SAYISAL_SEÇİM - 1]
+            Hoca_Seçildi = DOĞRU
+            EKRANA_YAZ(DERS.Ad + " dersi için " + DERS.Seçilen_Hoca + " hocası seçildi.")
+        Başka Durumda:
+            EKRANA_YAZ("Geçersiz hoca seçimi. Lütfen 1 ile " + MAX_HOCA_SECENEGI + " arasında bir sayı giriniz.")
+    Döngü_Sonu
+
+Döngü_Sonu
+
+EKRANA_YAZ("----- Seçmeli Ders Seçimi Tamamlandı -----")
+
+
+// --------------------------------------------------------------------------------
+// ADIM 4: Kayıt Özeti
+// --------------------------------------------------------------------------------
+
+EKRANA_YAZ(" ")
+EKRANA_YAZ("====================================")
+EKRANA_YAZ("----- DERS KAYIT ÖZETİ -----")
+EKRANA_YAZ("====================================")
+
+EKRANA_YAZ(">> Ana Dersler (Toplam 6):")
+Döngü her DERS için SEÇİLEN_ANA_DERSLER içinde:
+    EKRANA_YAZ("- " + DERS.Ad + 
+        (Eğer DERS.Tipi == "Şube" İse: " (Seçilen Şube: " + (Eğer DERS.Seçilen_Şube != HİÇBİRİ İse DERS.Seçilen_Şube Başka Durumda "Seçilmedi") + ")" Başka Durumda "")
+    )
+Döngü_Sonu
+
+EKRANA_YAZ(" ")
+EKRANA_YAZ(">> Seçmeli Dersler (Toplam " + SEÇİLEN_SECIMLI_DERSLER.Uzunluk + "):")
+Döngü her DERS için SEÇİLEN_SECIMLI_DERSLER içinde:
+    EKRANA_YAZ("- " + DERS.Ad + " (Seçilen Hoca: " + DERS.Seçilen_Hoca + ")")
+Döngü_Sonu
+
+EKRANA_YAZ("====================================")
+EKRANA_YAZ("Ders Kayıt Süreci Başarıyla Tamamlandı!")
+
+SON
+
+```
+
+Biraz inceledikten sonra kendi ders kayıt sürecimde pek çok arkadaşımın yaşadığı bir şeyi atladığımı fark ederek yeni bir komut verdim. "Güzel ama daha basitleştirip bir de if durumu eklemeni istiyorum. Bu if durumu eğer herhangi bir derste kontenjan sınırı dolmuşsa onu seçmemize sistemin izin vermemesini ve başka bir hoca seçmemizi sağlamalı."
+Gemini'nin cevabı:
+Harika bir fikir\! Kontenjan kontrolü, gerçek bir ders kaydı sisteminin önemli bir parçasıdır.
+
+İstediğiniz gibi, pseudocode'u daha basitleştirip, özellikle seçmeli dersler ve hoca seçimleri kısmına bir **kontenjan kontrolü (`IF` durumu)** ekliyorum.
+
+Bu yeni versiyonda, her hoca seçeneği için sabit bir kontenjan olacak. Eğer seçilen hocanın kontenjanı dolmuşsa, sistem kullanıcıyı uyaracak ve farklı bir hoca seçmesini isteyecektir.
+
+```
+BAŞLA
+
+// Sabitler ve Veri Yapıları Tanımlaması
+SABİTLER:
+    MAX_SECIM_HAKKI_SUBE = 2
+    KONTENJAN_LIMITI = 3 // Basitleştirilmiş, her seçmeli ders/hoca için maksimum öğrenci sayısı
+
+// --------------------------------------------------------------------------------
+// Veri Yapıları: Dersler ve Kontenjan Durumu
+// --------------------------------------------------------------------------------
+
+// Ana Dersler
+ANA_DERSLER = [
+    {Ad: "Ana Ders 1", Tipi: "Şube", Şubeler: ["A", "B"]}, // Şube dersi
+    {Ad: "Ana Ders 2", Tipi: "Şube", Şubeler: ["A", "B"]}, // Şube dersi
+    {Ad: "Ana Ders 3", Tipi: "Şube", Şubeler: ["A", "B"]}, // Şube dersi
+    {Ad: "Ana Ders 4", Tipi: "Şube", Şubeler: ["A", "B"]}, // Şube dersi
+    {Ad: "Ana Ders 5", Tipi: "Normal"},
+    {Ad: "Ana Ders 6", Tipi: "Normal"}
+]
+
+// Seçmeli Dersler ve Hocaları
+SECIMLI_DERSLER = [
+    {Ad: "Seçmeli 1", Hocalar: ["Hoca A1", "Hoca A2", "Hoca A3", "Hoca A4"]},
+    // ... (15 adet ders olduğu varsayılmıştır)
+    {Ad: "Seçmeli 15", Hocalar: ["Hoca O1", "Hoca O2", "Hoca O3", "Hoca O4"]}
+]
+
+// Kontenjan Takip Mekanizması (Hoca ve Şubeye Kayıtlı Öğrenci Sayısı)
+// Gerçek sistemde bir veritabanı olurdu. Burada bir Map/Sözlük kullanıyoruz.
+KONTENJAN_DURUMU = YENİ_SÖZLÜK
+
+// Başlangıçta tüm hoca/şube kontenjanlarını 0 olarak ayarla (Basitlik İçin)
+Döngü her DERS için SECIMLI_DERSLER içinde:
+    Döngü her HOCA için DERS.Hocalar içinde:
+        KONTENJAN_DURUMU[DERS.Ad + "-" + HOCA] = 0 // Örnek: "Seçmeli 1-Hoca A1": 0
+    Döngü_Sonu
+Döngü_Sonu
+
+// --------------------------------------------------------------------------------
+// Kayıt Durumu
+// --------------------------------------------------------------------------------
+KAYIT_LİSTESİ = Boş_Dizi
+Kalan_Şube_Seçim_Hakkı = MAX_SECIM_HAKKI_SUBE
+
+EKRANA_YAZ("===== Ders Kayıt Sistemi Başladı =====")
+
+// --------------------------------------------------------------------------------
+// ADIM 1: Ana Derslerin ve Şubelerin Seçimi (Basitçe Otomatik Seçim)
+// --------------------------------------------------------------------------------
+
+EKRANA_YAZ(">> 6 Ana Ders Otomatik Olarak Kaydediliyor...")
+
+Döngü her DERS için ANA_DERSLER içinde:
+    Eğer DERS.Tipi == "Şube" İse:
+        // Şube seçim hakkı kontrolü
+        Eğer Kalan_Şube_Seçim_Hakkı > 0 İse:
+            SEÇİLEN_ŞUBE = "A" // Örnek: İlk şubeyi seçtik
+            KAYIT_LİSTESİ.Ekle({Ders: DERS.Ad, Tip: "Ana", Şube: SEÇİLEN_ŞUBE})
+            Kalan_Şube_Seçim_Hakkı = Kalan_Şube_Seçim_Hakkı - 1
+            EKRANA_YAZ("- " + DERS.Ad + " (Şube: " + SEÇİLEN_ŞUBE + ") seçildi. Kalan hak: " + Kalan_Şube_Seçim_Hakkı)
+        Başka Durumda:
+            // Şube hakkı bitti, şubesiz kaydet (ya da kaydetme, senaryoya göre değişir)
+            KAYIT_LİSTESİ.Ekle({Ders: DERS.Ad, Tip: "Ana", Şube: "YOK (Hak Bitti)"})
+            EKRANA_YAZ("- " + DERS.Ad + " Şube hakkı bittiği için şubesiz kaydedildi.")
+    Başka Durumda:
+        KAYIT_LİSTESİ.Ekle({Ders: DERS.Ad, Tip: "Ana", Şube: "Yok"})
+        EKRANA_YAZ("- " + DERS.Ad + " normal ders olarak seçildi.")
+Döngü_Sonu
+
+EKRANA_YAZ(" ")
+
+// --------------------------------------------------------------------------------
+// ADIM 2: Seçmeli Derslerin ve Hocaların Seçimi (Kontenjan Kontrollü)
+// --------------------------------------------------------------------------------
+
+EKRANA_YAZ(">> Seçmeli Ders Seçimi Başladı (Kontenjan Limiti: " + KONTENJAN_LIMITI + ")")
+
+Döngü her DERS için SECIMLI_DERSLER içinde:
+    EKRANA_YAZ("--- " + DERS.Ad + " ---")
+    
+    Hoca_Seçimi_Başarılı = YANLIŞ
+    
+    // Kontenjan Kontrollü Seçim Döngüsü
+    Döngü Hoca_Seçimi_Başarılı == YANLIŞ İken:
+        
+        EKRANA_YAZ("Mevcut Hocalar: " + DERS.Hocalar.Birleştir(", "))
+        SEÇİM_ADI = KULLANICIDAN_GİRİŞ_AL("Lütfen hoca adını girin (" + DERS.Hocalar[0] + " vb.):")
+        
+        // 1. Kontrol: Girilen hoca listede var mı?
+        Eğer SEÇİM_ADI DERS.Hocalar içinde BULUNUYOR İse:
+            ANAHTAR = DERS.Ad + "-" + SEÇİM_ADI
+            MEVCUT_KAYIT = KONTENJAN_DURUMU[ANAHTAR]
+            
+            // 2. Kontrol (IF Durumu): Kontenjan Kontrolü
+            EĞER MEVCUT_KAYIT < KONTENJAN_LIMITI İSE:
+                // Kontenjan müsait
+                KONTENJAN_DURUMU[ANAHTAR] = KONTENJAN_DURUMU[ANAHTAR] + 1 // Öğrenciyi kaydet
+                KAYIT_LİSTESİ.Ekle({Ders: DERS.Ad, Tip: "Seçmeli", Hoca: SEÇİM_ADI})
+                Hoca_Seçimi_Başarılı = DOĞRU
+                EKRANA_YAZ("BAŞARILI: " + SEÇİM_ADI + " hocası seçildi. Mevcut kayıt: " + KONTENJAN_DURUMU[ANAHTAR])
+            
+            BAŞKA DURUMDA:
+                // Kontenjan Dolu
+                EKRANA_YAZ("HATA: " + SEÇİM_ADI + " hocasının kontenjanı dolmuştur (" + KONTENJAN_LIMITI + "). Lütfen başka bir hoca seçiniz.")
+            // IF Durumu Sonu
+            
+        BAŞKA DURUMDA:
+            EKRANA_YAZ("HATA: Geçersiz hoca adı. Lütfen listeden bir hoca seçiniz.")
+
+    Döngü_Sonu // Hoca_Seçimi_Başarılı Olana Kadar Döngü
+
+Döngü_Sonu // Seçmeli Ders Döngüsü
+
+EKRANA_YAZ(" ")
+
+// --------------------------------------------------------------------------------
+// ADIM 3: Kayıt Özeti
+// --------------------------------------------------------------------------------
+
+EKRANA_YAZ("===== Kayıt Tamamlandı =====")
+EKRANA_YAZ("Toplam Kayıtlı Ders Sayısı: " + KAYIT_LİSTESİ.Uzunluk)
+EKRANA_YAZ(" ")
+
+EKRANA_YAZ(">> Detaylı Kayıt Listesi:")
+Döngü her KAYIT için KAYIT_LİSTESİ içinde:
+    Eğer KAYIT.Tip == "Ana" İse:
+        EKRANA_YAZ("- [ANA DERS] " + KAYIT.Ders + " | Şube: " + KAYIT.Şube)
+    Başka Durumda:
+        EKRANA_YAZ("- [SEÇMELİ] " + KAYIT.Ders + " | Hoca: " + KAYIT.Hoca)
+Döngü_Sonu
+
+SON
+```
+
+En son da bunu dot koduna çevirmesini istedim.
+Gemini'nin cevabı:
+digraph DersKayitAkisi {
+    // Grafik Ayarları
+    graph [rankdir=TB, splines=polyline, nodesep=0.5];
+    node [shape=box, style="filled", fillcolor="#EEEEEE", fontname="Arial"];
+    edge [fontname="Arial"];
+
+    // Başlangıç ve Bitiş
+    start [shape=oval, label="BAŞLA", fillcolor="#90EE90"];
+    end [shape=oval, label="SON", fillcolor="#F08080"];
+
+    // Süreç Adımları
+    ana_kayit [label="ADIM 1: 6 Ana Ders Kaydı\n(Şube Dersleri İçin 2 Hak Kontrolü)", shape=box, fillcolor="#ADD8E6"];
+    sec_basla [label="ADIM 2: Seçmeli Ders Döngüsü\n(15 Ders Başlangıcı)", shape=box, fillcolor="#ADD8E6"];
+    hoca_sec [label="Kullanıcıdan Hoca Seçimi Al\n(Örn: 'Hoca A1')", shape=box];
+    
+    // Kontenjan Karar Noktası (IF Durumu)
+    kontenjan_karar [shape=diamond, label="KONTENJAN KONTROLÜ\n(Kayıt Sayısı < Limit?)", fillcolor="#FFD700"];
+    
+    kayit_basarili [label="Kayıt Başarılı:\nKayıt Listesine Ekle\nKontenjan Sayısını Arttır (+1)", shape=box, fillcolor="#98FB98"];
+    kontenjan_dolu [label="Kayıt Başarısız:\n'Kontenjan Dolu' Uyarısı Ver", shape=box, fillcolor="#F08080"];
+    
+    sec_son [label="Sonraki Seçmeli Derse Geç", shape=box, fillcolor="#ADD8E6"];
+    ozet [label="ADIM 3: Kayıt Özetini Göster", shape=box, fillcolor="#ADD8E6"];
+
+    // ------------------- AKIŞ BAĞLANTILARI -------------------
+    start -> ana_kayit [label="Başlat"];
+
+    // Ana Ders Kaydı ve Seçmeli Derslere Geçiş
+    ana_kayit -> sec_basla [label="6 Ana Ders Tamam"];
+
+    // Seçmeli Ders Döngüsü
+    sec_basla -> hoca_sec [label="Yeni Ders Başla"];
+
+    // Hoca Seçimi ve Kontenjan Kararı
+    hoca_sec -> kontenjan_karar [label="Hoca Adı Alındı"];
+
+    // Kontenjan Karar Akışı (IF/ELSE)
+    kontenjan_karar -> kayit_basarili [label="Evet (Müsait)"];
+    kontenjan_karar -> kontenjan_dolu [label="Hayır (Dolu)"];
+
+    // Başarılı Kayıt Durumu
+    kayit_basarili -> sec_son [label="Seçim Tamamlandı"];
+    
+    // Başarısız Kayıt Durumu (Döngünün Tekrarı)
+    kontenjan_dolu -> hoca_sec [label="Farklı Hoca Seçmek İçin Geri Dön"]; // Tekrar Hoca Seçimi
+
+    // Döngü Kontrolü
+    sec_son -> hoca_sec [label="Kalan Ders Var (i<15)"];
+    sec_son -> ozet [label="15 Ders Tamamlandı"];
+
+    // Bitiş
+    ozet -> end [label="Özet Gösterildi"];
+}
