@@ -1,0 +1,57 @@
+Öğrenci Numarası: 250541033
+Adı-Soyadı: Esmanur Yılmaz
+Bu ödevi Google Gemini ile yaptım.
+
+digraph DersKayitAkisi {
+    // Grafik Ayarları
+    graph [rankdir=TB, splines=polyline, nodesep=0.5];
+    node [shape=box, style="filled", fillcolor="#EEEEEE", fontname="Arial"];
+    edge [fontname="Arial"];
+
+    // Başlangıç ve Bitiş
+    start [shape=oval, label="BAŞLA", fillcolor="#90EE90"];
+    end [shape=oval, label="SON", fillcolor="#F08080"];
+
+    // Süreç Adımları
+    ana_kayit [label="ADIM 1: 6 Ana Ders Kaydı\n(Şube Dersleri İçin 2 Hak Kontrolü)", shape=box, fillcolor="#ADD8E6"];
+    sec_basla [label="ADIM 2: Seçmeli Ders Döngüsü\n(15 Ders Başlangıcı)", shape=box, fillcolor="#ADD8E6"];
+    hoca_sec [label="Kullanıcıdan Hoca Seçimi Al\n(Örn: 'Hoca A1')", shape=box];
+    
+    // Kontenjan Karar Noktası (IF Durumu)
+    kontenjan_karar [shape=diamond, label="KONTENJAN KONTROLÜ\n(Kayıt Sayısı < Limit?)", fillcolor="#FFD700"];
+    
+    kayit_basarili [label="Kayıt Başarılı:\nKayıt Listesine Ekle\nKontenjan Sayısını Arttır (+1)", shape=box, fillcolor="#98FB98"];
+    kontenjan_dolu [label="Kayıt Başarısız:\n'Kontenjan Dolu' Uyarısı Ver", shape=box, fillcolor="#F08080"];
+    
+    sec_son [label="Sonraki Seçmeli Derse Geç", shape=box, fillcolor="#ADD8E6"];
+    ozet [label="ADIM 3: Kayıt Özetini Göster", shape=box, fillcolor="#ADD8E6"];
+
+    // ------------------- AKIŞ BAĞLANTILARI -------------------
+    start -> ana_kayit [label="Başlat"];
+
+    // Ana Ders Kaydı ve Seçmeli Derslere Geçiş
+    ana_kayit -> sec_basla [label="6 Ana Ders Tamam"];
+
+    // Seçmeli Ders Döngüsü
+    sec_basla -> hoca_sec [label="Yeni Ders Başla"];
+
+    // Hoca Seçimi ve Kontenjan Kararı
+    hoca_sec -> kontenjan_karar [label="Hoca Adı Alındı"];
+
+    // Kontenjan Karar Akışı (IF/ELSE)
+    kontenjan_karar -> kayit_basarili [label="Evet (Müsait)"];
+    kontenjan_karar -> kontenjan_dolu [label="Hayır (Dolu)"];
+
+    // Başarılı Kayıt Durumu
+    kayit_basarili -> sec_son [label="Seçim Tamamlandı"];
+    
+    // Başarısız Kayıt Durumu (Döngünün Tekrarı)
+    kontenjan_dolu -> hoca_sec [label="Farklı Hoca Seçmek İçin Geri Dön"]; // Tekrar Hoca Seçimi
+
+    // Döngü Kontrolü
+    sec_son -> hoca_sec [label="Kalan Ders Var (i<15)"];
+    sec_son -> ozet [label="15 Ders Tamamlandı"];
+
+    // Bitiş
+    ozet -> end [label="Özet Gösterildi"];
+}
