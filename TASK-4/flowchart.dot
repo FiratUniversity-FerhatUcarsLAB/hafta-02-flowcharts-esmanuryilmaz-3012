@@ -2,56 +2,82 @@
 Adı-Soyadı: Esmanur Yılmaz
 Bu ödevi Google Gemini ile yaptım.
 
-digraph DersKayitAkisi {
+digraph DersKayitAkisi_Limitli {
     // Grafik Ayarları
-    graph [rankdir=TB, splines=polyline, nodesep=0.5];
-    node [shape=box, style="filled", fillcolor="#EEEEEE", fontname="Arial"];
+    graph [rankdir=TB, splines=polyline, nodesep=0.6, labelloc="t", label="Ders Kayıt Akışı (Seçmeli Ders Limiti: 3)"];
+    node [shape=box, style="filled", fontname="Arial"];
     edge [fontname="Arial"];
 
-    // Başlangıç ve Bitiş
-    start [shape=oval, label="BAŞLA", fillcolor="#90EE90"];
-    end [shape=oval, label="SON", fillcolor="#F08080"];
+    // Renk Tanımları
+    color_basla = "#90EE90"; // Başlangıç/Bitiş (Açık Yeşil)
+    color_surec = "#ADD8E6"; // Ana Süreçler (Açık Mavi)
+    color_girdi = "#F0E68C"; // Girdi/Çıktı (Sarı)
+    color_karar = "#FFD700"; // Karar/Koşul (Altın Sarısı)
+    color_hata = "#F08080";  // Hata/Kısıtlama (Mercan Kırmızısı)
 
-    // Süreç Adımları
-    ana_kayit [label="ADIM 1: 6 Ana Ders Kaydı\n(Şube Dersleri İçin 2 Hak Kontrolü)", shape=box, fillcolor="#ADD8E6"];
-    sec_basla [label="ADIM 2: Seçmeli Ders Döngüsü\n(15 Ders Başlangıcı)", shape=box, fillcolor="#ADD8E6"];
-    hoca_sec [label="Kullanıcıdan Hoca Seçimi Al\n(Örn: 'Hoca A1')", shape=box];
+    // Başlangıç ve Bitiş
+    start [shape=oval, label="BAŞLA", fillcolor=color_basla];
+    end [shape=oval, label="SON", fillcolor=color_basla];
+
+    // ADIM 1: Ana Ders ve Şube Seçimi
+    ana_ders_kayit [label="ADIM 1:\n6 Ana Ders Kaydı\n(4 Şube Dersi, 2 Normal)", shape=box, fillcolor=color_surec];
+    sube_kontrol [shape=diamond, label="Kalan Şube Seçim\nHakkı > 0 mı?", fillcolor=color_karar];
+    sube_sec [label="Şube Seçimi Yap (A/B)\nKalan Hakkı Azalt (-1)", shape=box, fillcolor=color_girdi];
+    sube_yok [label="Şube Hakkı Doldu\n(Şubesiz Kayıt/Atlama)", shape=box, fillcolor=color_hata];
+
+
+    // ADIM 2: Seçmeli Ders Döngüsü Başlangıcı
+    secim_limit_kontrol [shape=diamond, label="SEÇİLEN SEÇMELİ DERS\n< 3 Mİ?", fillcolor=color_karar];
+
+    // Seçmeli Ders Seçimi
+    ders_id_gir [label="Havuzdan Ders ID'si Al (1-15)", shape=box, fillcolor=color_girdi];
+    ders_secildi_mi [shape=diamond, label="Ders ID'si Geçerli\nve Zaten Seçilmedi mi?", fillcolor=color_karar];
     
-    // Kontenjan Karar Noktası (IF Durumu)
-    kontenjan_karar [shape=diamond, label="KONTENJAN KONTROLÜ\n(Kayıt Sayısı < Limit?)", fillcolor="#FFD700"];
+    // Hoca Seçimi ve Kontenjan Kontrolü
+    hoca_sec [label="Hoca Adı Al", shape=box, fillcolor=color_girdi];
+    kontenjan_karar [shape=diamond, label="KONTENJAN KONTROLÜ\n(Kayıt Sayısı < Limit: 3?)", fillcolor=color_karar];
     
-    kayit_basarili [label="Kayıt Başarılı:\nKayıt Listesine Ekle\nKontenjan Sayısını Arttır (+1)", shape=box, fillcolor="#98FB98"];
-    kontenjan_dolu [label="Kayıt Başarısız:\n'Kontenjan Dolu' Uyarısı Ver", shape=box, fillcolor="#F08080"];
+    kayit_basarili [label="Kayıt Başarılı:\nKayıt Listesine Ekle\nKontenjanı Artır (+1)", shape=box, fillcolor=color_surec];
+    kontenjan_dolu [label="HATA:\nKontenjan Dolu Uyarısı Ver", shape=box, fillcolor=color_hata];
     
-    sec_son [label="Sonraki Seçmeli Derse Geç", shape=box, fillcolor="#ADD8E6"];
-    ozet [label="ADIM 3: Kayıt Özetini Göster", shape=box, fillcolor="#ADD8E6"];
+    // Bitiş ve Özet
+    ozet [label="ADIM 3: Kayıt Özetini Göster\n(6 Ana Ders + 3 Seçmeli Ders)", shape=box, fillcolor=color_surec];
 
     // ------------------- AKIŞ BAĞLANTILARI -------------------
-    start -> ana_kayit [label="Başlat"];
 
-    // Ana Ders Kaydı ve Seçmeli Derslere Geçiş
-    ana_kayit -> sec_basla [label="6 Ana Ders Tamam"];
+    // 1. Ana Ders Akışı
+    start -> ana_ders_kayit;
+    ana_ders_kayit -> sube_kontrol [label="4 Şube Dersi İçin"];
+    sube_kontrol -> sube_sec [label="Evet"];
+    sube_kontrol -> sube_yok [label="Hayır"];
+    sube_sec -> ana_ders_kayit [label="Sonraki Ana Derse Dön"];
+    sube_yok -> ana_ders_kayit [label="Sonraki Ana Derse Dön"];
+    
+    // Ana Derslerden Seçmeli Derslere Geçiş
+    ana_ders_kayit -> secim_limit_kontrol [label="6 Ana Ders Tamamlandı"];
+    
+    // 2. Seçmeli Ders Döngüsü
+    secim_limit_kontrol -> ders_id_gir [label="Evet (Limit Altında)"];
+    
+    // Ders Seçimi
+    ders_id_gir -> ders_secildi_mi;
+    ders_secildi_mi -> hoca_sec [label="Evet (Geçerli)"];
+    ders_secildi_mi -> ders_id_gir [label="Hayır (Tekrar Seçim)"];
 
-    // Seçmeli Ders Döngüsü
-    sec_basla -> hoca_sec [label="Yeni Ders Başla"];
-
-    // Hoca Seçimi ve Kontenjan Kararı
+    // Hoca Seçimi ve Kontenjan Kontrolü
     hoca_sec -> kontenjan_karar [label="Hoca Adı Alındı"];
-
-    // Kontenjan Karar Akışı (IF/ELSE)
+    
+    // IF/ELSE Kontrolü
     kontenjan_karar -> kayit_basarili [label="Evet (Müsait)"];
     kontenjan_karar -> kontenjan_dolu [label="Hayır (Dolu)"];
 
-    // Başarılı Kayıt Durumu
-    kayit_basarili -> sec_son [label="Seçim Tamamlandı"];
+    // Başarılı Kayıt ve Döngü
+    kayit_basarili -> secim_limit_kontrol [label="Seçim Başarılı"];
     
-    // Başarısız Kayıt Durumu (Döngünün Tekrarı)
-    kontenjan_dolu -> hoca_sec [label="Farklı Hoca Seçmek İçin Geri Dön"]; // Tekrar Hoca Seçimi
+    // Başarısız Kayıt ve Döngü Tekrarı (Hoca Değiştirme)
+    kontenjan_dolu -> hoca_sec [label="Başka Hoca Seç"];
 
-    // Döngü Kontrolü
-    sec_son -> hoca_sec [label="Kalan Ders Var (i<15)"];
-    sec_son -> ozet [label="15 Ders Tamamlandı"];
-
-    // Bitiş
-    ozet -> end [label="Özet Gösterildi"];
+    // 3. Özet ve Bitiş
+    secim_limit_kontrol -> ozet [label="Hayır (Limit Doldu: 3)"];
+    ozet -> end [label="Kayıt Tamamlandı"];
 }
